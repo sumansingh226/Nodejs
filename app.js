@@ -1,14 +1,21 @@
+const file = require("fs");
 const http = require("http");
 const { system } = require("nodemon/lib/config");
 
 const server = http.createServer((req, res) => {
-    const { url } = req;
+    const { url, method } = req;
     if (url === "/") {
         res.setHeader("Content-type", "text/html");
         res.write("<html");
         res.write("<h1>Home Page</h1");
         res.write("</html");
-    } else {
+    }
+    if (url === "/message" && method === 'POST') {
+        file.writeFileSync("useremailandpassword.text", "Dummy")
+        res.statusCode = 302;
+        res.writeHead('Location', '/')
+    }
+    else {
         res.setHeader("Content-type", "text/html");
         res.write("<html");
         res.write(`<!DOCTYPE html>
