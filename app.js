@@ -21,7 +21,11 @@ const server = http.createServer((req, res) => {
     req.on("end", () => {
       const parseBody = Buffer.concat(body).toString();
       const message = parseBody.split("=")[1];
-      fs.writeFileSync("summi.text", message);
+      fs.writeFile("summi.text", message, (err) => {
+        res.statusCode(302);
+        res.setHeader("Location", "/");
+        return res.end()
+      });
     });
   }
   res.setHeader("Content-Type", "text/html");
