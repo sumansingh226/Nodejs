@@ -1,52 +1,41 @@
-const file = require("fs");
 const http = require("http");
-const { system } = require("nodemon/lib/config");
+const fs = require("fs");
 
 const server = http.createServer((req, res) => {
-    const { url, method } = req;
-    if (url === "/") {
-        res.setHeader("Content-type", "text/html");
-        res.write("<html");
-        res.write("<h1>Home Page</h1");
-        res.write("</html");
-    }
-    if (url === "/message" && method === 'POST') {
-        file.writeFileSync("useremailandpassword.text", "Dummy")
-        res.statusCode = 302;
-        res.writeHead('Location', '/')
-    }
-    else {
-        res.setHeader("Content-type", "text/html");
-        res.write("<html");
-        res.write(`<!DOCTYPE html>
-        <html lang="en">
-        <head>
-          <meta charset="UTF-8">
-          <title>Login Form</title>
-        </head>
-        <body>     
-        <h2>Login</h2>     
-        <form action="/submit" method="post">
-          <div>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-          </div>
-          <div>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-          </div>
-          <div>
-            <input type="submit" value="Submit">
-          </div>
-        </form>
-        
-        </body>
-        </html>
-        `);
-        res.write("</html");
-    }
-
-    res.end();
+  const url = req.url;
+  const method = req.method;
+  if (url === "/") {
+    res.write("<html>");
+    res.write("<head><title>Enter Message</title><head>");
+    res.write(
+      '<body><form action="/message" method="POST"><input type="text" name="message"><button type="submit">Send</button></form></body>'
+    );
+    res.write("</html>");
+    return res.end();
+  }
+  if (url === "/message" && method === "POST") {
+    const body = [];
+    req.on("data", (chunk) => {
+      console.log("chunk", chunk);
+      body.push(chunk);
+    });
+    req.on("end", () => {
+      const parseBody = Buffer.concat(body).toString();
+      const message = parseBody.split("=")[1];
+      fs.writeFileSync("summi.text", message);
+      console.log("parseBody", parseBody);
+    });
+    console.log("body", body);
+    res.statusCode = 302;
+    res.setHeader("Location", "/");
+    return res.end();
+  }
+  res.setHeader("Content-Type", "text/html");
+  res.write("<html>");
+  res.write("<head><title>My First Page</title><head>");
+  res.write("<body><h1>Hello from my Node.js Server!</h1></body>");
+  res.write("</html>");
+  res.end();
 });
 
-server.listen(4000);
+server.listen(3000);
