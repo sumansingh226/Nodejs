@@ -1,5 +1,16 @@
 const http = require("http");
 const routes = require("./routes");
-const server = http.createServer(routes);
+const express = require("express");
 
-server.listen(3000);
+const app = express();
+
+// Define a route
+app.get('/', (req, res) => {
+    res.send('Hello, Express!');
+});
+
+// Start the server
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
