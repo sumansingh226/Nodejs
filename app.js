@@ -6,12 +6,13 @@ const app = express();
 
 app.use((req, res, next) => {
     console.log("middlewhare");
-    next();
-})
+    res.send("<h1>Hello from expfress");
+    next(); // allow the request tocontinue the next middleware in lione
+});
 
 // Define a route
-app.get('/', (req, res) => {
-    res.send('Hello, Express!');
+app.get("/", (req, res) => {
+    res.send("Hello, Express!");
 });
 
 // Start the server
