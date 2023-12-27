@@ -4,16 +4,14 @@ const express = require("express");
 
 const app = express();
 
-app.use((req, res, next) => {
-    console.log("middlewhare");
-    res.send("<h1>Hello from expfress");
-    next(); // allow the request tocontinue the next middleware in line
-});
-
-
 // Define a route
 app.get("/", (req, res) => {
     res.send("Hello, Express!");
+});
+
+// Define a route
+app.get("/message", (req, res) => {
+    res.send("Hello, This is an Express Message!");
 });
 
 // Start the server
