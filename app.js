@@ -7,7 +7,7 @@ const app = express();
 app.use((req, res, next) => {
     console.log("middlewhare");
     res.send("<h1>Hello from expfress");
-    next(); // allow the request tocontinue the next middleware in lione
+    next(); // allow the request tocontinue the next middleware in line
 });
 
 
