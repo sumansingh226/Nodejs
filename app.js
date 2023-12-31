@@ -14,6 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/admin", adminRoute);
 app.use(shopRoutes);
+app.use(express.static(path.join(__dirname, 'public')));
 
 
 //define 404  
