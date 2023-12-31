@@ -11,7 +11,7 @@ app.use(express.json());
 // Parse incoming requests with URL-encoded payloads
 app.use(express.urlencoded({ extended: true }));
 
-app.use(adminRoute);
+app.use("/admin", adminRoute);
 app.use(shopRoutes);
 
 
