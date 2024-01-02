@@ -6,11 +6,17 @@ const products = [];
 
 // Define a route
 Router.post("/add-product", (req, res, next) => {
+    products.push({ title: req.body.Title })
+    res.sendFile(path.join(__dirname, "../", "views", "add-product.html"));
+    res.redirect("/");
+});
+
+Router.get("/add-product", (req, res, next) => {
+    products.push({ title: req.body.title })
     res.sendFile(path.join(__dirname, "../", "views", "add-product.html"));
 });
 
 Router.get("/product", (req, res, next) => {
-    products.push({ title: req.body.title })
     res.redirect("/");
 });
 module.exports = {
