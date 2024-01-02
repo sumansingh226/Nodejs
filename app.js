@@ -2,7 +2,7 @@ const http = require("http");
 const routes = require("./routes");
 const express = require("express");
 const path = require("path");
-const adminRoute = require("./routes/admin");
+const { Router } = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const app = express();
 
@@ -12,7 +12,7 @@ app.use(express.json());
 // Parse incoming requests with URL-encoded payloads
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/admin", adminRoute);
+app.use("/admin", Router);
 app.use(shopRoutes);
 app.use(express.static(path.join(__dirname, 'public')));
 
