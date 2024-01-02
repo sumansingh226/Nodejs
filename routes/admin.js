@@ -6,7 +6,8 @@ const products = [];
 
 // Define a route
 Router.post("/add-product", (req, res, next) => {
-    products.push({ title: req.body.Title })
+    const payload = req.body;
+    products.push(payload)
     res.sendFile(path.join(__dirname, "../", "views", "add-product.html"));
     res.redirect("/");
 });
