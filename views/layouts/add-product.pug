@@ -1,0 +1,33 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(http-equiv="X-UA-Compatible", content="IE=edge")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title #{pageTitle}
+    link(rel="stylesheet", href="/addproduct.css")
+  body
+    header.header
+      nav.nav
+        ul.nav-list
+          li.nav-item
+            a.nav-link(href='/') Shop
+          li.nav-item
+            a.nav-link(href='/admin/add-product') Add Product
+
+    main
+      h1 Add Product
+      form(action="/admin/add-product", method="post")
+        .form-group
+          label(for="title") Title:
+          input(type="text", id="title", name="title", placeholder="Enter title", required)
+        .form-group
+          label(for="description") Description:
+          textarea(id="description", name="description", placeholder="Enter description", required)
+        .form-group
+          label(for="price") Price:
+          input(type="number", id="price", name="price", placeholder="Enter price", step="0.01", required)
+        .form-group
+          label(for="image") Image URL:
+          input(type="url", id="image", name="image", placeholder="Enter image URL", required)
+        button(type="submit") Add Product
