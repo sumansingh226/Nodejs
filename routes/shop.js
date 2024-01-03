@@ -4,8 +4,7 @@ const path = require('path');
 const { products } = require("./admin");
 // Define a route
 Router.get("/", (req, res) => {
-    console.log(products);
-    res.render("shop")
+    res.render("shop", { props: products, docTitle: "Shop" })
 });;
 
 
