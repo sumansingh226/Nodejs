@@ -5,8 +5,7 @@ const { products } = require("./admin");
 // Define a route
 Router.get("/", (req, res) => {
     console.log(products);
-    const filePath = path.join(__dirname, "../", 'views', 'shop.html');
-    res.sendFile(filePath);
+    res.render("shop")
 });;
 
 
