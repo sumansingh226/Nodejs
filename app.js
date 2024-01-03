@@ -6,6 +6,7 @@ const { Router } = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const app = express();
 
+app.set("view engine", 'pug')
 // Parse incoming requests with JSON payloads
 app.use(express.json());
 
