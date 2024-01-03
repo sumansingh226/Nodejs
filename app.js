@@ -20,7 +20,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //define 404  
 app.use((req, res, next) => {
-    res.status(404).sendFile(path.join(__dirname, "./views", "PageNotFound.html"))
+    res.status(404).render("PageNotFound", { pageTitle: "404" })
 })
 // Start the server
 const PORT = 3000;
