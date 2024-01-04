@@ -1,22 +1,24 @@
-const http = require("http");
-const routes = require("./routes");
-const express = require("express");
-const adminRoute = require("./routes/admin")
-const shopRoutes = require("./routes/shop")
+const path = require('path');
+
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const errorController = require('./controllers/error');
+
 const app = express();
 
-// Parse incoming requests with JSON payloads
-app.use(express.json());
+app.set('view engine', 'ejs');
+app.set('views', 'views');
 
-// Parse incoming requests with URL-encoded payloads
-app.use(express.urlencoded({ extended: true }));
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
 
-app.use(adminRoute)
-app.use(shopRoutes)
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/admin', adminRoutes);
+app.use(shopRoutes);
 
-// Start the server
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+app.use(errorController.get404);
+
+app.listen(3000);

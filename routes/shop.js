@@ -1,15 +1,11 @@
-const express = require("express");
-const Router = express.Router();
+const path = require('path');
 
+const express = require('express');
 
-// Define a route
-Router.get("/", (req, res) => {
-    res.send("Hello, Express!");
-});
+const productsController = require('../controllers/products');
 
-// Define a route
-Router.get("/message", (req, res) => {
-    res.send("Hello, This is an Express Message!");
-});
+const router = express.Router();
 
-module.exports = Router;
+router.get('/', productsController.getProducts);
+
+module.exports = router;
