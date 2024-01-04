@@ -1,27 +1,24 @@
-const express = require("express");
-const path = require("path");
-const { Router } = require("./routes/admin");
-const shopRoutes = require("./routes/shop");
+const path = require('path');
+
+const express = require('express');
+const bodyParser = require('body-parser');
+
 const app = express();
 
-app.set("view engine", 'ejs')
-// Parse incoming requests with JSON payloads
-app.use(express.json());
+app.set('view engine', 'ejs');
+app.set('views', 'views');
 
-// Parse incoming requests with URL-encoded payloads
-app.use(express.urlencoded({ extended: true }));
+const adminData = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
 
-app.use("/admin", Router);
-app.use(shopRoutes);
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/admin', adminData.routes);
+app.use(shopRoutes);
 
-//define 404  
 app.use((req, res, next) => {
-    res.status(404).render("PageNotFound", { pageTitle: "404" })
-})
-// Start the server
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  res.status(404).render('404', { pageTitle: 'Page Not Found' });
 });
+
+app.listen(3000);

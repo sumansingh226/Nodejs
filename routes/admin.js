@@ -1,25 +1,29 @@
-const express = require("express");
-const path = require("path");
-const Router = express.Router();
+const path = require('path');
+
+const express = require('express');
+
+const rootDir = require('../util/path');
+
+const router = express.Router();
 
 const products = [];
 
-// Define a route
-Router.post("/add-product", (req, res, next) => {
-    const payload = req.body;
-    products.push(payload)
-    res.sendFile(path.join(__dirname, "../", "views", "add-product.html"));
-    res.redirect("/");
+// /admin/add-product => GET
+router.get('/add-product', (req, res, next) => {
+  res.render('add-product', {
+    pageTitle: 'Add Product',
+    path: '/admin/add-product',
+    formsCSS: true,
+    productCSS: true,
+    activeAddProduct: true
+  });
 });
 
-Router.get("/add-product", (req, res, next) => {
-    res.render("add-product", { pageTitle: "Add Product" })
+// /admin/add-product => POST
+router.post('/add-product', (req, res, next) => {
+  products.push({ title: req.body.title });
+  res.redirect('/');
 });
 
-Router.get("/product", (req, res, next) => {
-    res.redirect("/");
-});
-module.exports = {
-    Router: Router,
-    products: products
-};
+exports.routes = router;
+exports.products = products;
