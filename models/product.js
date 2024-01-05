@@ -22,6 +22,6 @@ module.exports = class Product {
         });
     }
     static fetchAll() {
-        return [];
+        fs.writeFile()
     }
 };
