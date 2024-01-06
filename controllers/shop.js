@@ -45,3 +45,15 @@ exports.getCheckout = (req, res, next) => {
     pageTitle: "Checkout",
   });
 };
+
+
+exports.getProductById = (req, res, next) => {
+  const { productID } = req.params;
+  Product.fetchById(productID, product => {
+    res.render("shop/product-detail", {
+      path: "/details",
+      pageTitle: "Product Details",
+      product: product
+    });
+  })
+};
