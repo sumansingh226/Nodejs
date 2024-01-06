@@ -51,7 +51,7 @@ exports.getProductById = (req, res, next) => {
   const { productID } = req.params;
   Product.fetchById(productID, product => {
     res.render("shop/product-detail", {
-      path: "/details",
+      path: "/products",
       pageTitle: product.title,
       product: product
     });

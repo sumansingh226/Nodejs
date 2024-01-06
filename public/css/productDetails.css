@@ -6,11 +6,15 @@ body {
 
 .product-details {
     padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .product-details__container {
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 .product-details__image img {
@@ -44,3 +48,21 @@ body {
     font-size: 16px;
     line-height: 1.6;
 }
+.btn {
+    display: inline-block;
+    padding: 0.25rem 1rem;
+    text-decoration: none;
+    font: inherit;
+    border: 1px solid #00695c;
+    color: #00695c;
+    background: white;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  .btn:hover,
+  .btn:active {
+    background-color: #00695c;
+    color: white;
+  }
+  
