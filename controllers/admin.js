@@ -12,7 +12,7 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
     const productID = new Date().getTime();
-    const payload = ({ title, description, price, quantity } = req.body);
+    const payload = ({ title, description, price, quantity, image } = req.body);
     const product = new Product({ ...payload, productID });
     product.save();
     res.redirect("/");
