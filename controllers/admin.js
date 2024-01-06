@@ -20,7 +20,7 @@ exports.postAddProduct = (req, res, next) => {
 
 exports.getAllProducts = (req, res, next) => {
     Product.fetchAll(product => {
-        res.render("admin/product",
+        res.render("admin/products",
             {
                 pros: product,
                 pageTitle: "Admin Products",
