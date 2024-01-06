@@ -8,4 +8,10 @@ const router = express.Router();
 
 router.get("/", productsController.getProducts);
 
+router.get("/products", productsController.getProducts);
+router.get("/cart", productsController.getProducts);
+router.get("/checkout", productsController.getProducts);
+
+
+
 module.exports = router;
