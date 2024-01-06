@@ -1,34 +1,43 @@
 <%- include('../includes/head.ejs') %>
-    <link rel="stylesheet" href="../css/product.css">
+<link rel="stylesheet" href="../css/product.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome -->
+
 </head>
 
 <body>
-    <%- include('../includes/navigation.ejs') %>
+<%- include('../includes/navigation.ejs') %>
 
-    <main>
-        <% if (prods.length > 0) { %>
-            <div class="grid">
-                <% for (let product of prods) { %>
-                    <article class="card product-item">
-                        <header class="card__header">
-                            <h1 class="product__title"><%= product.title %></h1>
-                        </header>
-                        <div class="card__image">
-                            <img src="<%= product.image %>"    alt="image">
-                        </div>
-                        <div class="card__content">
-                            <h2 class="product__price">$<%= product.price %></h2>
-                            <p class="product__description"><%= product.description %></p>
-                            <h2 class="product__price"><%= product.quantity %></h2>
-                        </div>
-                        <div class="card__actions">
-                            <button class="btn">Add to Cart</button>
-                        </div>
-                    </article>
-                <% } %>
+<main>
+    <% if (prods.length > 0) { %>
+    <div class="grid">
+        <% for (let product of prods) { %>
+        <article class="card product-item">
+            <header class="card__header">
+                <h1 class="product__title">
+                  <%= product.title %>
+                  <a class="cart-button" href="/cart/<%= product.productID %>">
+                      <i class="fas fa-shopping-cart cart-icon"></i>
+                  </a>
+              </h1>
+            </header>
+            <div class="card__image">
+                <img src="<%= product.image %>" alt="image">
             </div>
-        <% } else { %>
-            <h1>No Products Found!</h1>
+            <div class="card__content">
+                <h2 class="product__price">$<%= product.price %></h2>
+                <p class="product__description"><%= product.description %></p>
+                <h2 class="product__price"><%= product.quantity %></h2>
+            </div>
+            <div class="card__actions">
+                <a class="edit-button" href="/admin/edit-product/<%= product.productID %>">Edit</a>
+                <a class="delete-button" href="">Delete</a>
+
+            </div>
+        </article>
         <% } %>
-    </main>
+    </div>
+    <% } else { %>
+    <h1>No Products Found!</h1>
+    <% } %>
+</main>
 <%- include('../includes/end.ejs') %>
