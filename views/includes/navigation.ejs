@@ -24,6 +24,13 @@
       </li>
       <li class="main-header__item">
         <a
+          class="main-header__link <%= path === '/cart' ? 'active' : '' %>"
+          href="/orders"
+          >My Orders</a
+        >
+      </li>
+      <li class="main-header__item">
+        <a
           class="main-header__link <%= path === '/admin/add-product' ? 'active' : '' %>"
           href="/admin/add-product"
           >Add Product</a
