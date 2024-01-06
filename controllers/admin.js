@@ -1,13 +1,5 @@
 const Product = require("../models/product");
 
-exports.postAddProduct = (req, res, next) => {
-    const productID = new Date().getTime();
-    const payload = ({ title, description, price, quantity } = req.body);
-    const product = new Product({ ...payload, productID });
-    product.save();
-    res.redirect("/");
-};
-
 exports.getAddProduct = (req, res, next) => {
     res.render("admin/add-product", {
         pageTitle: "Add Product",
@@ -17,3 +9,22 @@ exports.getAddProduct = (req, res, next) => {
         activeAddProduct: true,
     });
 };
+
+exports.postAddProduct = (req, res, next) => {
+    const productID = new Date().getTime();
+    const payload = ({ title, description, price, quantity } = req.body);
+    const product = new Product({ ...payload, productID });
+    product.save();
+    res.redirect("/");
+};
+
+exports.getAllProducts = (req, res, next) => {
+    Product.fetchAll(product => {
+        res.render("admin/product",
+            {
+                pros: product,
+                pageTitle: "Admin Products",
+                path: "/admin/products"
+            })
+    })
+}
