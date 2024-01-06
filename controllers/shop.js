@@ -52,7 +52,7 @@ exports.getProductById = (req, res, next) => {
   Product.fetchById(productID, product => {
     res.render("shop/product-detail", {
       path: "/details",
-      pageTitle: "Product Details",
+      pageTitle: product.title,
       product: product
     });
   })
