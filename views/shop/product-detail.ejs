@@ -19,6 +19,11 @@
         <p class="product-details__description"><%= product.description %></p>
         <form action="/cart" method="post">
           <button class="btn" type="submit">Add to cart</button>
+          <input
+            type="hidden"
+            name="productID"
+            value="<%=product.productID%>"
+          />
         </form>
       </div>
     </div>

@@ -32,6 +32,10 @@ exports.getCart = (req, res, next) => {
     pageTitle: "Cart Items",
   });
 };
+exports.addToCart = (req, res, next) => {
+  const { productID } = req.body;
+  console.log("productID", productID);
+};
 exports.getOrders = (req, res, next) => {
   res.render("shop/orders", {
     path: "/orders",
