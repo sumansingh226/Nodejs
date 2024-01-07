@@ -18,7 +18,11 @@
             </div>
             <div class="form-control">
                 <label for="price">Price</label>
-                <input type="number" name="price" id="price" step="0.01">
+                <input type="number" name="price" id="price" step="0.01" 
+                <% if (editing) { %>
+                    value="<%= product.price %>"
+                <% } %>
+            >  
             </div>
             <div class="form-control">
                 <label for="quantity">quantity</label>
