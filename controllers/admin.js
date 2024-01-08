@@ -30,7 +30,6 @@ exports.postEditProduct = (req, res, next) => {
     const payload = ({ title, description, price, quantity, image, productID } = req.body);
     const product = new Product({ ...payload });
     product.Edit(productID)
-    console.log(JSON.stringify(req.body));
     res.redirect("/admin/products")
 }
 exports.postAddProduct = (req, res, next) => {
@@ -39,6 +38,12 @@ exports.postAddProduct = (req, res, next) => {
     const product = new Product({ ...payload, productID });
     product.save();
     res.redirect("/");
+};
+exports.postDeleteProduct = (req, res, next) => {
+    const { productID } = req.body;
+    console.log("productID", productID);
+    Product.deleteProduct(productID);
+    res.redirect("/admin/products");
 };
 
 exports.getAllProducts = (req, res, next) => {
