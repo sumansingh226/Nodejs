@@ -25,11 +25,42 @@ module.exports = class Cart {
                 cart.products.push({ productID: id, qty: 1 });
             }
 
-            cart.totalPrice += +productPrice; // Adding product price to total price
+            cart.totalPrice += +productPrice;
 
             fs.writeFile(filePath, JSON.stringify(cart), (err) => {
                 if (err) {
                     console.log(err);
+                }
+            });
+        });
+    }
+    static deleteFromCart(id, productPrice) {
+        fs.readFile(filePath, (err, file) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+
+            let cart = { products: [], totalPrice: 0 };
+            if (file) {
+                cart = JSON.parse(file);
+            }
+
+            const existingProductIndex = cart.products.findIndex(
+                (prod) => prod.productID == id
+            );
+
+            if (existingProductIndex !== -1) {
+                const deletedProduct = cart.products[existingProductIndex];
+                cart.totalPrice -= deletedProduct.qty * productPrice;
+                cart.products.splice(existingProductIndex, 1);
+            } else {
+                console.log("Product not found in cart.");
+            }
+
+            fs.writeFile(filePath, JSON.stringify(cart), (err) => {
+                if (err) {
+                    console.error(err);
                 }
             });
         });
