@@ -31,6 +31,9 @@ module.exports = class Product {
             });
         });
     }
+    Edit() {
+
+    }
 
     static fetchAll(callback) {
         getProductsFromFile(callback);
