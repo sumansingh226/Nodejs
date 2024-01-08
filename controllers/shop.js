@@ -42,6 +42,7 @@ exports.addToCart = (req, res, next) => {
   })
   console.log("productID", productID);
 };
+
 exports.getOrders = (req, res, next) => {
   res.render("shop/orders", {
     path: "/orders",
