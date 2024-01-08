@@ -28,7 +28,7 @@
 
 .total-price-section {
     margin-top: 20px;
-    border-top: 1px solid rgb(28, 4, 113);
+    border-top: 1px solid #ccc;
     padding-top: 10px;
     text-align: right;
 }
@@ -42,5 +42,5 @@
 .total-price {
     font-size: 24px;
     font-weight: bold;
-    color: #f00; 
+    color: #333; 
 }

@@ -52,11 +52,17 @@ exports.getCart = (req, res, next) => {
 exports.addToCart = (req, res, next) => {
   const { productID } = req.body;
   Product.fetchById(productID, (product) => {
-    console.log("product", product);
     Cart.addToCart(product.productID, product.price);
     res.redirect("/cart");
   });
-  console.log("productID", productID);
+};
+
+exports.removeFromCart = (req, res, next) => {
+  const { productID } = req.body;
+  Product.fetchById(productID, (product) => {
+    Cart.removeFromCart(product.productID, product.price);
+    res.redirect("/cart");
+  });
 };
 
 exports.getOrders = (req, res, next) => {

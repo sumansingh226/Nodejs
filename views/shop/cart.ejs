@@ -27,8 +27,8 @@
                                     </p>
                                 </div>
                                 <div class="card__actions">
-                                    <a href="/admin/checkout-product/<%= product.productID %>?edit=true" class="btn">Checkout</a>
-                                    <form action="/admin/delete-product" method="POST">
+                                    <a href="/order/<%= product.productID %>?edit=true" class="btn">Checkout</a>
+                                    <form action="/remove-cart" method="POST">
                                         <input type="hidden" name="productID" id="productID" value="<%= product.productID %>">
                                         <button class="btn" type="submit">Remove</button>
                                     </form>                                
@@ -38,7 +38,7 @@
                             <% } %>
                             <div class="total-price-section">
                                 <h2>Total Price:</h2>
-                                <p class="total-price">$<%= prods.totalPrice %></p>
+                                <p class="total-price">$<%= cart.totalPrice %></p>
                             </div>
                     </div>
                     <% } else { %>
