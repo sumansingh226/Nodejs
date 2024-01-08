@@ -25,3 +25,22 @@
 .product__description {
     text-align: center;
 }
+
+.total-price-section {
+    margin-top: 20px;
+    border-top: 1px solid rgb(28, 4, 113);
+    padding-top: 10px;
+    text-align: right;
+}
+
+.total-price-section h2 {
+    margin-bottom: 5px;
+    font-size: 18px;
+    color: #333;
+}
+
+.total-price {
+    font-size: 24px;
+    font-weight: bold;
+    color: #f00; 
+}
