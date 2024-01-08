@@ -31,8 +31,17 @@ module.exports = class Product {
             });
         });
     }
-    Edit() {
 
+    Edit(id) {
+        getProductsFromFile((products) => {
+            const productIndex = products.findIndex((prod) => prod.productID == id);
+            products[productIndex] = { ...this.productsInformation }
+            fs.writeFile(filePath, JSON.stringify(products), (err) => {
+                if (err) {
+                    console.error(err);
+                }
+            });
+        });
     }
 
     static fetchAll(callback) {

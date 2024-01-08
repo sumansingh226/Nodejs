@@ -1,11 +1,11 @@
 [
   {
     "title": "Atomic Habbit",
-    "price": "250",
-    "quantity": "1",
     "image": "https://prh.imgix.net/articles/atomichabits-1600x800-05.jpg",
+    "price": "260",
+    "quantity": "1",
     "description": "A supremely practical and useful book. James Clear distils the most fundamental information about habit formation, so you can accomplish more by focusing on less.",
-    "productID": 1704545686475
+    "productID": "1704545686475"
   },
   {
     "title": "Iphone15ProMax",
@@ -14,5 +14,13 @@
     "quantity": "1",
     "description": "This is a product by Apple in latest releaseit is very nice",
     "productID": 1704566376722
+  },
+  {
+    "title": "Samsung TV",
+    "image": "https://cdn1.smartprix.com/rx-iTI6whxSg-w420-h420/samsung-cue70-65-inc.webp",
+    "price": "500000",
+    "quantity": "1",
+    "description": "Samsung LED tv with wifi and HD screen",
+    "productID": 1704729536258
   }
 ]

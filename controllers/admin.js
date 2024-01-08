@@ -27,8 +27,11 @@ exports.getEditProduct = (req, res, next) => {
 };
 
 exports.postEditProduct = (req, res, next) => {
+    const payload = ({ title, description, price, quantity, image, productID } = req.body);
+    const product = new Product({ ...payload });
+    product.Edit(productID)
     console.log(JSON.stringify(req.body));
-    res.redirect("/")
+    res.redirect("/admin/products")
 }
 exports.postAddProduct = (req, res, next) => {
     const productID = new Date().getTime();
