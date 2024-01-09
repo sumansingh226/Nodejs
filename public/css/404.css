@@ -17,9 +17,7 @@ h1 {
   font-size: 5em;
   margin: 0;
   color: #333;
-  animation: shake 0.5s ease-in-out infinite;
 }
-
 
 p {
   font-size: 1.2em;
