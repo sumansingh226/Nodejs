@@ -21,11 +21,16 @@ exports.getAddProduct = (req, res, next) => {
 };
 
 exports.postAddProduct = (req, res, next) => {
-    const productID = new Date().getTime();
     const payload = ({ title, description, price, quantity, image } = req.body);
-    const product = new Product({ ...payload, productID });
-    product.save();
-    res.redirect("/");
+    const product = new Product({ ...payload });
+    product
+        .save()
+        .then(() => {
+            res.redirect("/");
+        })
+        .catch((err) => {
+            console.log(err);
+        });
 };
 
 exports.getEditProduct = (req, res, next) => {
