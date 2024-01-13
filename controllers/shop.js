@@ -15,7 +15,7 @@ exports.getProducts = (req, res, next) => {
 };
 
 exports.getIndex = (req, res, next) => {
-  Product.fetchAll((products) => {
+  Product.fetchAll().then(([products]) => {
     res.render("shop/index", {
       prods: products,
       pageTitle: "Shop",
@@ -24,7 +24,10 @@ exports.getIndex = (req, res, next) => {
       activeShop: true,
       productCSS: true,
     });
-  });
+  }).catch((err) => {
+    console.log(err);
+  })
+
 };
 
 exports.getCart = (req, res, next) => {
