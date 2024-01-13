@@ -7,7 +7,15 @@ const db = require("./db/mySqlDbConntection")
 const app = express();
 app.set("view engine", "ejs");
 app.set("views", "views");
-db.execute()
+
+db.execute('SELECT * FROM products')
+    .then((data) => {
+        console.log(data);
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 
