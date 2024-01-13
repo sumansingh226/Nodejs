@@ -8,7 +8,7 @@ module.exports = class Product {
     Edit(id) { }
     static deleteProduct(id) { }
 
-    static fetchAll(callback) { }
+    static fetchAll() { }
 
-    static fetchById(id, callback) { }
+    static fetchById(id) { }
 };
