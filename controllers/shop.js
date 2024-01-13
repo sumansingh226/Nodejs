@@ -15,16 +15,19 @@ exports.getProducts = (req, res, next) => {
 };
 
 exports.getIndex = (req, res, next) => {
-  Product.fetchAll((products) => {
+  Product.fetchAll().then((products) => {
     res.render("shop/index", {
-      prods: products,
+      prods: products[0],
       pageTitle: "Shop",
       path: "/",
-      hasProducts: products.length > 0,
+      hasProducts: products[0].length > 0,
       activeShop: true,
       productCSS: true,
     });
-  });
+  }).catch((err) => {
+    console.log(err);
+  })
+
 };
 
 exports.getCart = (req, res, next) => {

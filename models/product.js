@@ -1,3 +1,5 @@
+const db = require("../db/mySqlDbConntection")
+
 module.exports = class Product {
     constructor(productsInformation) {
         this.productsInformation = productsInformation;
@@ -8,7 +10,9 @@ module.exports = class Product {
     Edit(id) { }
     static deleteProduct(id) { }
 
-    static fetchAll() { }
+    static fetchAll() {
+        return db.execute('SELECT * FROM products')
+    }
 
     static fetchById(id) { }
 };
