@@ -8,4 +8,4 @@ const connection = mysql.createPool({
     database: 'nodejsmysql',
 });
 
-module.exports = connection.promise()
+module.exports = connection.promise();
