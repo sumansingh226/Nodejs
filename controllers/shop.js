@@ -15,12 +15,12 @@ exports.getProducts = (req, res, next) => {
 };
 
 exports.getIndex = (req, res, next) => {
-  Product.fetchAll().then((products) => {
+  Product.fetchAll().then(([products]) => {
     res.render("shop/index", {
-      prods: products[0],
+      prods: products,
       pageTitle: "Shop",
       path: "/",
-      hasProducts: products[0].length > 0,
+      hasProducts: products.length > 0,
       activeShop: true,
       productCSS: true,
     });
