@@ -1,13 +1,22 @@
 const Product = require("../models/product");
 
 exports.getAllProducts = (req, res, next) => {
-    Product.fetchAll((product) => {
-        res.render("admin/products", {
-            prods: product,
-            pageTitle: "Admin Products",
-            path: "/admin/products",
+    Product.fetchAll()
+        .then(([products]) => {
+            res.render("admin/products", {
+                prods: products,
+                pageTitle: "Admin Products",
+                path: "/admin/products",
+            });
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).render("error", {
+                pageTitle: "Error",
+                errorMessage: "An error occurred while fetching the products.",
+            });
         });
-    });
+
 };
 
 exports.getAddProduct = (req, res, next) => {
