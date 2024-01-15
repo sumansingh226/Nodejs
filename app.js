@@ -10,6 +10,7 @@ app.set("views", "views");
 
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
+const Product = require("./models/seqProduct");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
@@ -19,7 +20,7 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-sequelize.sync()
+Product.sync()
     .then((result) => {
         console.log(result, "Database synced successfully");
         app.listen(3000, () => {
@@ -29,5 +30,3 @@ sequelize.sync()
     .catch((error) => {
         console.error("Error syncing database:", error);
     });
-
-
