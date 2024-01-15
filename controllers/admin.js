@@ -38,10 +38,15 @@ exports.postAddProduct = (req, res, next) => {
         price,
         quantity,
         description,
-    }).then((result) => {
-        console.log("result", result).catch((err) => console.log("eer", err));
-    });
+    })
+        .then((result) => {
+            console.log("result", result);
+        })
+        .catch((err) => {
+            console.log("error", err);
+        });
 };
+
 
 exports.getEditProduct = (req, res, next) => {
     const editMode = req.query.edit;
