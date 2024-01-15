@@ -1,4 +1,5 @@
-const Product = require("../models/product");
+// const Product = require("../models/product");
+const Product = require("../models/seqProduct");
 
 exports.getAllProducts = (req, res, next) => {
     Product.fetchAll()
@@ -16,7 +17,6 @@ exports.getAllProducts = (req, res, next) => {
                 errorMessage: "An error occurred while fetching the products.",
             });
         });
-
 };
 
 exports.getAddProduct = (req, res, next) => {
@@ -30,16 +30,16 @@ exports.getAddProduct = (req, res, next) => {
 };
 
 exports.postAddProduct = (req, res, next) => {
-    const payload = ({ title, description, price, quantity, image } = req.body);
-    const product = new Product({ ...payload });
-    product
-        .save()
-        .then(() => {
-            res.redirect("/");
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+    const { title, description, price, quantity, image } = req.body;
+    Product.create({
+        title,
+        image,
+        price,
+        quantity,
+        description,
+    }).then((result) => {
+        console.log("result", result).catch((err) => console.log("eer", err));
+    });
 };
 
 exports.getEditProduct = (req, res, next) => {
