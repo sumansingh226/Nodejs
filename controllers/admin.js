@@ -32,6 +32,7 @@ exports.getAddProduct = (req, res, next) => {
 exports.postAddProduct = (req, res, next) => {
     const { title, description, price, quantity, image } = req.body;
     Product.create({
+        productID: 100,
         title,
         image,
         price,
