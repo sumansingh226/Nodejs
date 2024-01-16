@@ -40,7 +40,7 @@ exports.postAddProduct = (req, res, next) => {
         description,
     })
         .then((result) => {
-            console.log("result", result);
+            console.log("Product Created succesfuly ");
         })
         .catch((err) => {
             console.log("error", err);
