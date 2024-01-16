@@ -102,7 +102,6 @@ exports.getProductById = (req, res, next) => {
 
   Product.fetchById(productID)
     .then(([product]) => {
-      console.log("product", product);
       if (!product) {
         return res.status(404).render("error", {
           pageTitle: "Product Not Found",
