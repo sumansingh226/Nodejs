@@ -1,5 +1,5 @@
 // const Product = require("../models/product");
-const Product = require("../models/seqProduct");
+const Product = require("../models/product");
 
 exports.getAllProducts = (req, res, next) => {
     Product.fetchAll()
@@ -8,6 +8,9 @@ exports.getAllProducts = (req, res, next) => {
                 prods: products,
                 pageTitle: "Admin Products",
                 path: "/admin/products",
+                hasProducts: products.length > 0,
+                activeShop: true,
+                productCSS: true,
             });
         })
         .catch((err) => {
@@ -17,6 +20,8 @@ exports.getAllProducts = (req, res, next) => {
                 errorMessage: "An error occurred while fetching the products.",
             });
         });
+
+
 };
 
 exports.getAddProduct = (req, res, next) => {
@@ -31,27 +36,27 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
     const { title, description, price, quantity, image } = req.body;
-    Product.create({
+    Product.save({
         productID: new Date().getTime().toString(),
-        title,
-        image,
-        price,
-        quantity,
-        description,
+        title: title,
+        image: image,
+        price: price,
+        quantity: quantity,
+        description: description,
     })
         .then((result) => {
-            console.log("result", result);
+            console.log("Product Created succesfuly ");
         })
         .catch((err) => {
             console.log("error", err);
         });
 };
 
-
-exports.getEditProduct = (req, res, next) => {
-    const editMode = req.query.edit;
-    const productID = req.params.productID;
-    Product.fetchById(productID, (product) => {
+exports.getEditProduct = async (req, res, next) => {
+    try {
+        const editMode = req.query.edit;
+        const productID = req.params.productID;
+        const [product] = await Product.fetchById(productID);
         res.render("admin/edit-product", {
             pageTitle: "Edit Product",
             path: "/admin/edit-product",
@@ -59,10 +64,14 @@ exports.getEditProduct = (req, res, next) => {
             productCSS: true,
             activeAddProduct: true,
             editing: editMode,
-            product: product,
+            product: product[0],
         });
-    });
+    } catch (err) {
+        console.log("Error:", err);
+        res.status(500).send("Internal Server Error");
+    }
 };
+
 
 exports.postEditProduct = (req, res, next) => {
     const payload = ({ title, description, price, quantity, image, productID } =

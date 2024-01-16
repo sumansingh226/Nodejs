@@ -1,24 +1,23 @@
 const db = require("../db/mySqlDbConntection");
 
 module.exports = class Product {
-    constructor(productsInformation) {
-        this.productsInformation = productsInformation;
-    }
-
-    save() {
+    static save(productsInformation) {
         return db.execute(
-            "INSERT INTO products (title, image, price, quantity, description) VALUES (?, ?, ?, ?, ?)",
+            "INSERT INTO products (productID, title, image, price, quantity, description) VALUES (?, ?, ?, ?, ?, ?)",
             [
-                this.productsInformation.title,
-                this.productsInformation.image,
-                this.productsInformation.price,
-                this.productsInformation.quantity,
-                this.productsInformation.description,
+                productsInformation.productID,
+                productsInformation.title,
+                productsInformation.image,
+                productsInformation.price,
+                productsInformation.quantity,
+                productsInformation.description,
             ]
         );
+
+
     }
 
-    Edit(id) { }
+    static Edit(id) { }
     static deleteProduct(id) {
         return db.execute("DELETE  FROM products WHERE productID = ?", [id]);
     }
