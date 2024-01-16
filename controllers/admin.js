@@ -36,13 +36,13 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
     const { title, description, price, quantity, image } = req.body;
-    Product.create({
+    Product.save({
         productID: new Date().getTime().toString(),
-        title,
-        image,
-        price,
-        quantity,
-        description,
+        title: title,
+        image: image,
+        price: price,
+        quantity: quantity,
+        description: description,
     })
         .then((result) => {
             console.log("Product Created succesfuly ");
@@ -57,7 +57,6 @@ exports.getEditProduct = async (req, res, next) => {
         const editMode = req.query.edit;
         const productID = req.params.productID;
         const [product] = await Product.fetchById(productID);
-        console.log("product", product);
         res.render("admin/edit-product", {
             pageTitle: "Edit Product",
             path: "/admin/edit-product",

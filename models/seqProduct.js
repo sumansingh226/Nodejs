@@ -4,7 +4,6 @@ const sequelize = require('../db/sequelize');
 const Product = sequelize.define('Products', {
     productID: {
         type: Sequelize.STRING(50),
-        autoIncrement: true,
         allowNull: false,
         primaryKey: true,
     },
