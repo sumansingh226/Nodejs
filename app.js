@@ -2,15 +2,14 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const errorController = require("./controllers/error");
-const sequelize = require("./db/sequelize");
-
+const Product = require("./models/seqProduct")
+const User = require("./models/user")
 const app = express();
-app.set("view engine", "ejs");
-app.set("views", "views");
-
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
-const Product = require("./models/seqProduct");
+
+app.set("view engine", "ejs");
+app.set("views", "views");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
