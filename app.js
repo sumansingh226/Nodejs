@@ -20,6 +20,7 @@ app.use(shopRoutes);
 app.use(errorController.get404);
 let databaseSynced = false;
 
+Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
 // Function to sync the database and start the server
 async function syncDatabaseAndStartServer() {
     try {
