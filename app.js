@@ -21,6 +21,8 @@ app.use(errorController.get404);
 let databaseSynced = false;
 
 Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
+User.hasMany(Product);
+
 // Function to sync the database and start the server
 async function syncDatabaseAndStartServer() {
     try {
