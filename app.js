@@ -29,6 +29,7 @@ async function syncDatabaseAndStartServer() {
             await Product.sync({ force: false }); // Set force to true to drop and recreate tables
             console.log("Database synced successfully");
 
+
             // Update the flag to indicate that the database has been synchronized
             databaseSynced = true;
         }
