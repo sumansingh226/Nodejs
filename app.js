@@ -2,15 +2,14 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const errorController = require("./controllers/error");
-const sequelize = require("./db/sequelize");
-
+const Product = require("./models/seqProduct")
+const User = require("./models/user")
 const app = express();
-app.set("view engine", "ejs");
-app.set("views", "views");
-
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
-const Product = require("./models/seqProduct");
+
+app.set("view engine", "ejs");
+app.set("views", "views");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
@@ -21,6 +20,9 @@ app.use(shopRoutes);
 app.use(errorController.get404);
 let databaseSynced = false;
 
+Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
+User.hasMany(Product);
+
 // Function to sync the database and start the server
 async function syncDatabaseAndStartServer() {
     try {
@@ -28,7 +30,10 @@ async function syncDatabaseAndStartServer() {
         if (!databaseSynced) {
             // Sync the database
             await Product.sync({ force: false }); // Set force to true to drop and recreate tables
-            console.log("Database synced successfully");
+            await User.sync({ force: false }); // Set force to true to drop and recreate tables
+
+            console.log("Database and tables synced successfully");
+
 
             // Update the flag to indicate that the database has been synchronized
             databaseSynced = true;
