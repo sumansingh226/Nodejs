@@ -2,8 +2,8 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const errorController = require("./controllers/error");
-const Product = require("./models/seqProduct")
-const User = require("./models/user")
+const Product = require("./models/seqProduct");
+const User = require("./models/user");
 const app = express();
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
@@ -20,7 +20,7 @@ app.use(shopRoutes);
 app.use(errorController.get404);
 let databaseSynced = false;
 
-Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
+Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 User.hasMany(Product);
 
 // Function to sync the database and start the server
@@ -33,8 +33,6 @@ async function syncDatabaseAndStartServer() {
             await User.sync({ force: false }); // Set force to true to drop and recreate tables
 
             console.log("Database and tables synced successfully");
-
-
             // Update the flag to indicate that the database has been synchronized
             databaseSynced = true;
         }
