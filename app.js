@@ -30,8 +30,17 @@ async function syncDatabaseAndStartServer() {
         if (!databaseSynced) {
             // Sync the database
             await Product.sync({ force: false }); // Set force to true to drop and recreate tables
-            await User.sync({ force: false }); // Set force to true to drop and recreate tables
+            await User.sync({ force: false }).then(() => User.findById(1)).then((user) => {
+                if (!user) {
+                    User.create({ id: "1", name: "suman chauhan", email: "suman.singh@gmail.com" })
 
+                }
+                return user;
+            }); // Set force to true to drop and recreate tables
+            const user = await User.findById(1);
+            if (!user) {
+                return User.create({ id: "1", name: "suman chauhan", email: "suman.singh@gmail.com" })
+            }
             console.log("Database and tables synced successfully");
             // Update the flag to indicate that the database has been synchronized
             databaseSynced = true;
