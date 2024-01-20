@@ -7,6 +7,7 @@ const User = require("./models/user");
 const app = express();
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
+const Order = require("./models/Order");
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -44,6 +45,7 @@ const synchronizeDatabase = async () => {
             // Sync the Product and User models
             await Product.sync({ force: false });
             await User.sync({ force: false });
+            await Order.sync({ force: false });
 
             // Check if the user with id 1 exists
             let user = await User.findByPk(1);
