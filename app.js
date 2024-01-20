@@ -36,7 +36,7 @@ async function syncDatabaseAndStartServer() {
 
                 }
                 return user;
-            }); // Set force to true to drop and recreate tables
+            }).then((user) => console.log(user)); // Set force to true to drop and recreate tables
             const user = await User.findById(1);
             if (!user) {
                 return User.create({ id: "1", name: "suman chauhan", email: "suman.singh@gmail.com" })
