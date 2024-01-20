@@ -19,16 +19,21 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
-User.hasMany(Product);
+// Establish the association between User and Product models
 
 app.use((req, res, next) => {
-    User.findByPk(1)
+    const currentUserId = 1;
+
+    User.findByPk(currentUserId)
         .then((user) => {
+            console.log("req.user:", user);
             req.user = user;
             next();
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+            console.error("Error fetching user:", err);
+            res.status(500).json({ error: "Internal Server Error" });
+        });
 });
 
 let databaseSynced = false; // Initialize the flag outside the function
@@ -55,7 +60,8 @@ const synchronizeDatabase = async () => {
             } else {
                 console.log("User already exists:", user.toJSON());
             }
-
+            Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
+            User.hasMany(Product);
             console.log("Database and tables synced successfully");
             // Update the flag to indicate that the database has been synchronized
             databaseSynced = true;
@@ -81,8 +87,6 @@ const synchronizeDatabase = async () => {
 };
 
 // Placeholder for the Express.js application (replace this with your actual app)
-const app = require('./yourExpressApp'); // Make sure to replace 'yourExpressApp' with the correct path
 
 // Call the function to synchronize the database and start the server
 synchronizeDatabase();
-
