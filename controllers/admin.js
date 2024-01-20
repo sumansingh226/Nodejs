@@ -36,31 +36,25 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
     const { title, description, price, quantity, image } = req.body;
-    console.log("req.user", req);
 
-    if (req.user && req.user.id) {
-        Product.create({
-            title: title,
-            image: image,
-            price: price,
-            quantity: quantity,
-            description: description,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            UserId: req.user.id, // Associate the product with the user
+    Product.create({
+        title: title,
+        image: image,
+        price: price,
+        quantity: quantity,
+        description: description,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        UserId: req.user.id, // Associate the product with the user
+    })
+        .then((result) => {
+            console.log("Product Created successfully", result);
+            res.redirect("/admin/products");
         })
-            .then((result) => {
-                console.log("Product Created successfully", result);
-                res.redirect("/admin/products");
-            })
-            .catch((err) => {
-                console.log("Error creating product", err);
-                res.status(500).json({ error: "Internal Server Error" });
-            });
-    } else {
-        console.log("User information not available in req.user");
-        res.status(401).json({ error: "Unauthorized" });
-    }
+        .catch((err) => {
+            console.log("Error creating product", err);
+            res.status(500).json({ error: "Internal Server Error" });
+        });
 };
 
 
