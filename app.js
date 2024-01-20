@@ -22,6 +22,12 @@ app.use(errorController.get404);
 Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 User.hasMany(Product);
 
+app.use((req, res) => {
+    User.findByPk(1)
+        .then((user) => {
+            req.user = user;
+        }).catch((err) => console.log(err))
+})
 
 const synchronizeDatabase = async () => {
     try {
@@ -47,18 +53,24 @@ const synchronizeDatabase = async () => {
         console.log("Database and tables synced successfully");
         // Update the flag to indicate that the database has been synchronized
         databaseSynced = true;
+
+        // Start the server after synchronizing the database
+        app.listen(3000, () => {
+            console.log("Server is running on port 3000");
+        });
+
+        // Optionally, handle SIGINT signal to gracefully close the server on Ctrl+C
+        process.on("SIGINT", () => {
+            // Perform cleanup or any necessary tasks before exiting
+            console.log("Server shutting down");
+            process.exit();
+        });
     } catch (error) {
         console.error("Error synchronizing the database:", error);
         // Handle the error as needed
     }
 };
 
-// Call the function to synchronize the database
+// Call the function to synchronize the database and start the server
 synchronizeDatabase();
 
-// Optionally, you can handle SIGINT signal to gracefully close the server on Ctrl+C
-process.on("SIGINT", () => {
-    // Perform cleanup or any necessary tasks before exiting
-    console.log("Server shutting down");
-    process.exit();
-});
