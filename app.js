@@ -19,7 +19,6 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-// Establish the association between User and Product models
 
 app.use((req, res, next) => {
     const currentUserId = 1;
@@ -60,6 +59,8 @@ const synchronizeDatabase = async () => {
             } else {
                 console.log("User already exists:", user.toJSON());
             }
+            // Establish the association between User and Product models
+
             Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
             User.hasMany(Product);
             console.log("Database and tables synced successfully");
