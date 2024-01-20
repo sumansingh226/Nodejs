@@ -43,6 +43,8 @@ exports.postAddProduct = (req, res, next) => {
         price: price,
         quantity: quantity,
         description: description,
+        createdAt: new Date(),
+        updatedAt: new Date(),
     })
         .then((result) => {
             console.log("Product Created succesfuly ", result);
