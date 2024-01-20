@@ -23,40 +23,39 @@ let databaseSynced = false;
 Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 User.hasMany(Product);
 
-// Function to sync the database and start the server
-async function syncDatabaseAndStartServer() {
-    try {
-        // Check if the database has already been synchronized
-        if (!databaseSynced) {
-            // Sync the database
-            await Product.sync({ force: false }); // Set force to true to drop and recreate tables
-            await User.sync({ force: false }).then(() => User.findById(1)).then((user) => {
-                if (!user) {
-                    User.create({ id: "1", name: "suman chauhan", email: "suman.singh@gmail.com" })
 
-                }
-                return user;
-            }).then((user) => console.log(user)); // Set force to true to drop and recreate tables
-            const user = await User.findById(1);
-            if (!user) {
-                return User.create({ id: "1", name: "suman chauhan", email: "suman.singh@gmail.com" })
-            }
-            console.log("Database and tables synced successfully");
-            // Update the flag to indicate that the database has been synchronized
-            databaseSynced = true;
+const synchronizeDatabase = async () => {
+    try {
+        // Sync the Product and User models
+        await Product.sync({ force: false });
+        await User.sync({ force: false });
+
+        // Check if the user with id 1 exists
+        let user = await User.findByPk(1);
+
+        if (!user) {
+            // If user doesn't exist, create a new user
+            user = await User.create({
+                id: 1,
+                name: "suman chauhan",
+                email: "suman.singh@gmail.com"
+            });
+            console.log("New user created:", user.toJSON());
+        } else {
+            console.log("User already exists:", user.toJSON());
         }
 
-        // Start the server
-        app.listen(3000, () => {
-            console.log("Server is running on port 3000");
-        });
+        console.log("Database and tables synced successfully");
+        // Update the flag to indicate that the database has been synchronized
+        databaseSynced = true;
     } catch (error) {
-        console.error("Error syncing database:", error);
+        console.error("Error synchronizing the database:", error);
+        // Handle the error as needed
     }
-}
+};
 
-// Call the function to sync the database and start the server
-syncDatabaseAndStartServer();
+// Call the function to synchronize the database
+synchronizeDatabase();
 
 // Optionally, you can handle SIGINT signal to gracefully close the server on Ctrl+C
 process.on("SIGINT", () => {
