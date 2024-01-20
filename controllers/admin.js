@@ -37,20 +37,24 @@ exports.getAddProduct = (req, res, next) => {
 exports.postAddProduct = (req, res, next) => {
     const { title, description, price, quantity, image } = req.body;
     Product.save({
-        productID: new Date().getTime().toString(),
         title: title,
         image: image,
         price: price,
         quantity: quantity,
         description: description,
+        createdAt: new Date(),
+        updatedAt: new Date(),
     })
         .then((result) => {
-            console.log("Product Created succesfuly ");
+            console.log("Product Created successfully", result);
+            res.redirect("/admin/products");
         })
         .catch((err) => {
-            console.log("error", err);
+            console.log("Error creating product", err);
+            res.status(500).json({ error: "Internal Server Error" });
         });
 };
+
 
 exports.getEditProduct = async (req, res, next) => {
     try {

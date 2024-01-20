@@ -3,7 +3,7 @@ const sequelize = require("../db/sequelize");
 
 const User = sequelize.define("Users", {
     id: {
-        type: Sequelize.STRING(50),
+        type: Sequelize.INTEGER(50),
         allowNull: false,
         primaryKey: true,
     },
@@ -12,7 +12,7 @@ const User = sequelize.define("Users", {
         allowNull: false,
     },
     email: {
-        type: Sequelize.STRING(20),
+        type: Sequelize.STRING(60),
         allowNull: false,
     },
 });

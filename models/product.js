@@ -3,7 +3,7 @@ const db = require("../db/mySqlDbConntection");
 module.exports = class Product {
     static save(productsInformation) {
         return db.execute(
-            "INSERT INTO products (productID, title, image, price, quantity, description) VALUES (?, ?, ?, ?, ?, ?)",
+            "INSERT INTO products (productID, title, image, price, quantity, description,createdAt,updatedAt) VALUES (?, ?, ?, ?, ?, ?,?,?)",
             [
                 productsInformation.productID,
                 productsInformation.title,
@@ -11,6 +11,8 @@ module.exports = class Product {
                 productsInformation.price,
                 productsInformation.quantity,
                 productsInformation.description,
+                productsInformation.createdAt,
+                productsInformation.updatedAt
             ]
         );
 
