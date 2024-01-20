@@ -31,47 +31,58 @@ app.use((req, res, next) => {
         .catch((err) => console.log(err));
 });
 
+let databaseSynced = false; // Initialize the flag outside the function
+
 const synchronizeDatabase = async () => {
     try {
-        // Sync the Product and User models
-        await Product.sync({ force: false });
-        await User.sync({ force: false });
+        // Check if the database has already been synchronized
+        if (!databaseSynced) {
+            // Sync the Product and User models
+            await Product.sync({ force: false });
+            await User.sync({ force: false });
 
-        // Check if the user with id 1 exists
-        let user = await User.findByPk(1);
+            // Check if the user with id 1 exists
+            let user = await User.findByPk(1);
 
-        if (!user) {
-            // If user doesn't exist, create a new user
-            user = await User.create({
-                id: 1,
-                name: "suman chauhan",
-                email: "suman.singh@gmail.com",
+            if (!user) {
+                // If user doesn't exist, create a new user
+                user = await User.create({
+                    id: 1,
+                    name: "suman chauhan",
+                    email: "suman.singh@gmail.com",
+                });
+                console.log("New user created:", user.toJSON());
+            } else {
+                console.log("User already exists:", user.toJSON());
+            }
+
+            console.log("Database and tables synced successfully");
+            // Update the flag to indicate that the database has been synchronized
+            databaseSynced = true;
+
+            // Start the server after synchronizing the database
+            app.listen(3000, () => {
+                console.log("Server is running on port 3000");
             });
-            console.log("New user created:", user.toJSON());
+
+            // Optionally, handle SIGINT signal to gracefully close the server on Ctrl+C
+            process.on("SIGINT", () => {
+                // Perform cleanup or any necessary tasks before exiting
+                console.log("Server shutting down");
+                process.exit();
+            });
         } else {
-            console.log("User already exists:", user.toJSON());
+            console.log("Database already synced. Skipping synchronization.");
         }
-
-        console.log("Database and tables synced successfully");
-        // Update the flag to indicate that the database has been synchronized
-        databaseSynced = true;
-
-        // Start the server after synchronizing the database
-        app.listen(3000, () => {
-            console.log("Server is running on port 3000");
-        });
-
-        // Optionally, handle SIGINT signal to gracefully close the server on Ctrl+C
-        process.on("SIGINT", () => {
-            // Perform cleanup or any necessary tasks before exiting
-            console.log("Server shutting down");
-            process.exit();
-        });
     } catch (error) {
         console.error("Error synchronizing the database:", error);
         // Handle the error as needed
     }
 };
 
+// Placeholder for the Express.js application (replace this with your actual app)
+const app = require('./yourExpressApp'); // Make sure to replace 'yourExpressApp' with the correct path
+
 // Call the function to synchronize the database and start the server
 synchronizeDatabase();
+
