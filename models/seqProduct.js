@@ -27,6 +27,8 @@ const Product = sequelize.define('Products', {
         type: Sequelize.STRING,
         allowNull: false,
     },
+    timestamps: false, // Disable timestamps for this model
+
 });
 
 module.exports = Product;
