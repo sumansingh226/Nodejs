@@ -36,8 +36,7 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
     const { title, description, price, quantity, image } = req.body;
-
-    Product.create({
+    Product.save({
         title: title,
         image: image,
         price: price,
@@ -45,7 +44,6 @@ exports.postAddProduct = (req, res, next) => {
         description: description,
         createdAt: new Date(),
         updatedAt: new Date(),
-        UserId: req.user.id, // Associate the product with the user
     })
         .then((result) => {
             console.log("Product Created successfully", result);
