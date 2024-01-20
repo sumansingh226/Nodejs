@@ -22,12 +22,14 @@ app.use(errorController.get404);
 Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 User.hasMany(Product);
 
-app.use((req, res) => {
+app.use((req, res, next) => {
     User.findByPk(1)
         .then((user) => {
             req.user = user;
-        }).catch((err) => console.log(err))
-})
+            next();
+        })
+        .catch((err) => console.log(err));
+});
 
 const synchronizeDatabase = async () => {
     try {
@@ -43,7 +45,7 @@ const synchronizeDatabase = async () => {
             user = await User.create({
                 id: 1,
                 name: "suman chauhan",
-                email: "suman.singh@gmail.com"
+                email: "suman.singh@gmail.com",
             });
             console.log("New user created:", user.toJSON());
         } else {
@@ -73,4 +75,3 @@ const synchronizeDatabase = async () => {
 
 // Call the function to synchronize the database and start the server
 synchronizeDatabase();
-
