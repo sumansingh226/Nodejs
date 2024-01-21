@@ -97,7 +97,7 @@ app.use((req, res, next) => {
 // ---connect with mongoDb
 
 function connectToMongoDB() {
-    const dbURI = "mongodb://localhost:27017/mognodbNodejsUdemy";
+    const dbURI = 'mongodb://localhost:27017/nodejsmongodbudemy';
 
     mongoose.connect(dbURI, {
         useNewUrlParser: true,
@@ -106,27 +106,17 @@ function connectToMongoDB() {
 
     const db = mongoose.connection;
 
-    db.on("connected", () => {
-        console.log("Connected to MongoDB");
+    db.on('connected', () => {
+        console.log('Connected to MongoDB');
+        // Check if this is the first time connecting
+        if (db._hasOpened == null || db._hasOpened === false) {
+            console.log('Database is newly created');
+        }
+        db._hasOpened = true; // Set the flag to true after the first connection
     });
 
-    db.on("error", (err) => {
-        console.error("Error connecting to MongoDB:", err);
-    });
-
-    db.on("disconnected", () => {
-        console.log("Disconnected from MongoDB");
-    });
-
-    process.on("SIGINT", () => {
-        db.close(() => {
-            console.log(
-                "Mongoose default connection disconnected through app termination"
-            );
-            process.exit(0);
-        });
-    });
 }
 
 // Call the function to connect to MongoDB
 connectToMongoDB();
+
