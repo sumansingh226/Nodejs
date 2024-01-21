@@ -8,7 +8,7 @@ const app = express();
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const Order = require("./models/Order");
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -20,7 +20,6 @@ app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 
 app.use(errorController.get404);
-
 
 app.use((req, res, next) => {
     const currentUserId = 1;
@@ -95,36 +94,39 @@ app.use((req, res, next) => {
 // // Call the function to synchronize the database and start the server
 // synchronizeDatabase();
 
+// ---connect with mongoDb
 
-// ---connect with mongoDb 
+function connectToMongoDB() {
+    const dbURI = "mongodb://localhost:27017/mognodbNodejsUdemy";
 
-mongoose.connect('mongodb://localhost:27017/nodejsUdemyMongoDb', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
-
-// Optional: Get the default connection
-const db = mongoose.connection;
-
-// Event handling for successful connection
-db.on('connected', () => {
-    console.log('Connected to MongoDB');
-});
-
-// Event handling for connection errors
-db.on('error', (err) => {
-    console.error('Error connecting to MongoDB:', err);
-});
-
-// Event handling for disconnection
-db.on('disconnected', () => {
-    console.log('Disconnected from MongoDB');
-});
-
-// Close the Mongoose connection if the Node.js process is terminated
-process.on('SIGINT', () => {
-    db.close(() => {
-        console.log('Mongoose default connection disconnected through app termination');
-        process.exit(0);
+    mongoose.connect(dbURI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
     });
-});
+
+    const db = mongoose.connection;
+
+    db.on("connected", () => {
+        console.log("Connected to MongoDB");
+    });
+
+    db.on("error", (err) => {
+        console.error("Error connecting to MongoDB:", err);
+    });
+
+    db.on("disconnected", () => {
+        console.log("Disconnected from MongoDB");
+    });
+
+    process.on("SIGINT", () => {
+        db.close(() => {
+            console.log(
+                "Mongoose default connection disconnected through app termination"
+            );
+            process.exit(0);
+        });
+    });
+}
+
+// Call the function to connect to MongoDB
+connectToMongoDB();
