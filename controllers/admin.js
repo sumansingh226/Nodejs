@@ -75,7 +75,7 @@ exports.postEditProduct = async (req, res, next) => {
     const payload = ({ title, description, price, quantity, image, productID } =
         req.body);
     try {
-        const updatedProduct = await Product.findByIdAndUpdate(productID, payload, { new: false });
+        await Product.findByIdAndUpdate(productID, payload, { new: false });
         res.redirect("/admin/products");
     } catch (error) {
         console.error('Error updating product:', error);
