@@ -26,14 +26,12 @@ app.use(errorController.get404);
 
 function connectToMongoDB() {
     const dbURI = process.env.CONNECTION_URL;
-    console.log(dbURI);
     mongoose.connect(dbURI, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     });
 
     const db = mongoose.connection;
-
     db.on('connected', () => {
         console.log('Connected to MongoDB');
         // Check if this is the first time connecting
