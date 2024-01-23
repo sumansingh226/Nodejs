@@ -24,7 +24,7 @@ app.use(shopRoutes);
 app.use(errorController.get404);
 
 app.use((req, res, next) => {
-    User.findById('65b00ff8cb2d19250df095c9')
+    User.findById('65b01476ce17e45f6b8944bd')
         .then((user) => {
             req.user = user
             next()
@@ -41,14 +41,21 @@ function connectToMongoDB() {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     }).then(() => {
-        const user = new User({
-            name: "Suman Singh",
-            email: "suman1112@gmail.com",
-            cart: {
-                items: []
-            },
+        User.findById('65b01476ce17e45f6b8944bd').then((user) => {
+            if (!user) {
+                const user = new User({
+                    name: "Suman Singh",
+                    email: "suman1112@gmail.com",
+                    cart: {
+                        items: []
+                    },
+                })
+                user.save().then(() => console.log("user added"))
+            }
+
         })
-        user.save().then(() => console.log("user added"))
+
+
     });
     const db = mongoose.connection;
 
