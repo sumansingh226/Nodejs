@@ -74,7 +74,6 @@ exports.getEditProduct = async (req, res, next) => {
 exports.postEditProduct = async (req, res, next) => {
     const payload = ({ title, description, price, quantity, image, productID } =
         req.body);
-    const product = new Product({ ...payload });
     try {
         const updatedProduct = await Product.findByIdAndUpdate(productID, payload, { new: false });
         console.log('Product updated:', updatedProduct);
