@@ -1,1 +1,26 @@
-node_modules
+# Dependency directories
+node_modules/
+
+# Environment configuration
+.env
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Test coverage
+coverage/
+
+# Transpiled output
+lib/
+
+# OS generated files
+.DS_Store
+Thumbs.db
