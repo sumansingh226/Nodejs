@@ -37,13 +37,11 @@ function connectToMongoDB() {
             name: "Suman Singh",
             email: "suman1112@gmail.com",
             cart: {
-                items: [
-
-                ],
+                items: []
             },
         })
+        user.save().then(() => console.log("user added"))
     });
-    user.save().then(() => console.log("user added"))
     const db = mongoose.connection;
 
     db.on('connected', () => {
