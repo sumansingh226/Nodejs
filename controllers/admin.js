@@ -4,7 +4,6 @@ const Product = require("../models/monggosProductSchema");
 exports.getAllProducts = (req, res, next) => {
     Product.find()
         .then((products) => {
-            console.log("products", products);
             res.render("admin/products", {
                 prods: products,
                 pageTitle: "Admin Products",
@@ -85,10 +84,10 @@ exports.postEditProduct = async (req, res, next) => {
 exports.postDeleteProduct = async (req, res, next) => {
     try {
         await Product.findByIdAndDelete(req.productID);
+        res.redirect("/admin/products", req.productID);
         console.log('Product deleted successfully');
     } catch (error) {
         console.error('Error deleting product:', error);
     }
 
-    res.redirect("/admin/products");
 };
