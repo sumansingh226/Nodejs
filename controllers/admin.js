@@ -71,7 +71,7 @@ exports.getEditProduct = async (req, res, next) => {
 };
 
 
-exports.postEditProduct = (req, res, next) => {
+exports.postEditProduct = async (req, res, next) => {
     const payload = ({ title, description, price, quantity, image, productID } =
         req.body);
     const product = new Product({ ...payload });
