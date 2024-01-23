@@ -43,7 +43,7 @@ function connectToMongoDB() {
             },
         })
     });
-
+    user.save().then(() => console.log("user added"))
     const db = mongoose.connection;
 
     db.on('connected', () => {
