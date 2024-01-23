@@ -1,9 +1,10 @@
 // const Product = require("../models/product");
-const Product = require("../models/product");
+const Product = require("../models/monggosProductSchema");
 
 exports.getAllProducts = (req, res, next) => {
-    Product.fetchAll()
-        .then(([products]) => {
+    Product.find()
+        .then((products) => {
+            console.log("products", products);
             res.render("admin/products", {
                 prods: products,
                 pageTitle: "Admin Products",
@@ -36,15 +37,8 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
     const { title, description, price, quantity, image } = req.body;
-    Product.save({
-        title: title,
-        image: image,
-        price: price,
-        quantity: quantity,
-        description: description,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    })
+    const product = new Product({ title, description, price, quantity, image })
+    product.save()
         .then((result) => {
             console.log("Product Created successfully", result);
             res.redirect("/admin/products");
@@ -60,7 +54,7 @@ exports.getEditProduct = async (req, res, next) => {
     try {
         const editMode = req.query.edit;
         const productID = req.params.productID;
-        const [product] = await Product.fetchById(productID);
+        const product = await Product.findById(productID)
         res.render("admin/edit-product", {
             pageTitle: "Edit Product",
             path: "/admin/edit-product",
@@ -68,7 +62,7 @@ exports.getEditProduct = async (req, res, next) => {
             productCSS: true,
             activeAddProduct: true,
             editing: editMode,
-            product: product[0],
+            product: product,
         });
     } catch (err) {
         console.log("Error:", err);
@@ -81,7 +75,12 @@ exports.postEditProduct = (req, res, next) => {
     const payload = ({ title, description, price, quantity, image, productID } =
         req.body);
     const product = new Product({ ...payload });
-    product.Edit(productID);
+    try {
+        const updatedProduct = await Product.findByIdAndUpdate(productID, payload, { new: false });
+        console.log('Product updated:', updatedProduct);
+    } catch (error) {
+        console.error('Error updating product:', error);
+    }
     res.redirect("/admin/products");
 };
 
