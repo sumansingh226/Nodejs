@@ -23,9 +23,12 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-app.use((rreq, res, next) => {
+app.use((req, res, next) => {
     User.findById('65b00ff8cb2d19250df095c9')
-
+        .then((user) => {
+            req.user = user
+            next()
+        })
 })
 
 
