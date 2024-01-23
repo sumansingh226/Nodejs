@@ -23,7 +23,10 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
+app.use((rreq, res, next) => {
+    User.findById('65b00ff8cb2d19250df095c9')
 
+})
 
 
 function connectToMongoDB() {
