@@ -1,9 +1,9 @@
 const Cart = require("../models/cart");
-const Product = require("../models/product");
+const Product = require("../models/monggosProductSchema");
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll()
-    .then(([products]) => {
+  Product.find()
+    .then((products) => {
       res.render("shop/product-list", {
         prods: products,
         pageTitle: "Products",
@@ -99,24 +99,21 @@ exports.getCheckout = (req, res, next) => {
 };
 exports.getProductById = (req, res, next) => {
   const { productID } = req.params;
-
-  Product.fetchById(productID)
-    .then(([product]) => {
+  Product.findById(productID)
+    .then((product) => {
       if (!product) {
         return res.status(404).render("error", {
           pageTitle: "Product Not Found",
           errorMessage: "The requested product could not be found.",
         });
       }
-
       const { title } = product;
       res.render("shop/product-detail", {
         path: "/products",
         pageTitle: title,
-        product: product[0],
+        product: product,
       });
     })
-
     .catch((err) => {
       console.error(err);
       res.status(500).render("error", {
