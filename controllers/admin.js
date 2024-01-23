@@ -82,8 +82,13 @@ exports.postEditProduct = async (req, res, next) => {
     }
 };
 
-exports.postDeleteProduct = (req, res, next) => {
-    const { productID } = req.body;
-    Product.findByIdAndDelete(productID);
+exports.postDeleteProduct = async (req, res, next) => {
+    try {
+        await Product.findByIdAndDelete(productID);
+        console.log('Product deleted successfully');
+    } catch (error) {
+        console.error('Error deleting product:', error);
+    }
+
     res.redirect("/admin/products");
 };
