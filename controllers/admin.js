@@ -4,7 +4,6 @@ const Product = require("../models/monggosProductSchema");
 exports.getAllProducts = (req, res, next) => {
     Product.find()
         .then((products) => {
-            console.log("products", products);
             res.render("admin/products", {
                 prods: products,
                 pageTitle: "Admin Products",
@@ -71,21 +70,25 @@ exports.getEditProduct = async (req, res, next) => {
 };
 
 
-exports.postEditProduct = (req, res, next) => {
+exports.postEditProduct = async (req, res, next) => {
     const payload = ({ title, description, price, quantity, image, productID } =
         req.body);
-    const product = new Product({ ...payload });
     try {
-        const updatedProduct = await Product.findByIdAndUpdate(productID, payload, { new: false });
-        console.log('Product updated:', updatedProduct);
+        await Product.findByIdAndUpdate(productID, payload, { new: false });
+        res.redirect("/admin/products");
     } catch (error) {
         console.error('Error updating product:', error);
     }
-    res.redirect("/admin/products");
 };
 
-exports.postDeleteProduct = (req, res, next) => {
-    const { productID } = req.body;
-    Product.deleteProduct(productID);
-    res.redirect("/admin/products");
+exports.postDeleteProduct = async (req, res, next) => {
+    try {
+        const { productID } = req.body;
+        await Product.findByIdAndDelete(productID);
+        res.status(200).redirect("/admin/products");
+        console.log('Product deleted successfully');
+    } catch (error) {
+        console.error('Error deleting product:', error);
+    }
+
 };

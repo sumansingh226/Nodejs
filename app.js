@@ -2,12 +2,13 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const errorController = require("./controllers/error");
-const User = require("./models/user");
+// const User = require("./models/user");
 const app = express();
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const Order = require("./models/Order");
 const mongoose = require("mongoose");
+const User = require("./models/monggoseUserModel")
 require('dotenv').config();
 
 
@@ -31,8 +32,16 @@ function connectToMongoDB() {
     mongoose.connect(dbURI, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
+    }).then(() => {
+        const user = new User({
+            name: "Suman Singh",
+            email: "suman1112@gmail.com",
+            cart: {
+                items: []
+            },
+        })
+        user.save().then(() => console.log("user added"))
     });
-
     const db = mongoose.connection;
 
     db.on('connected', () => {
