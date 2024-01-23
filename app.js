@@ -28,6 +28,8 @@ app.use((req, res, next) => {
         .then((user) => {
             req.user = user
             next()
+        }).catch((err) => {
+            console.log(err);
         })
 })
 
