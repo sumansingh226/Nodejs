@@ -84,7 +84,7 @@ exports.postEditProduct = async (req, res, next) => {
 
 exports.postDeleteProduct = async (req, res, next) => {
     try {
-        await Product.findByIdAndDelete(productID);
+        await Product.findByIdAndDelete(req.productID);
         console.log('Product deleted successfully');
     } catch (error) {
         console.error('Error deleting product:', error);
