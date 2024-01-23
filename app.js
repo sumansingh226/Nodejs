@@ -24,25 +24,29 @@ app.use(errorController.get404);
 
 
 
+
 function connectToMongoDB() {
     const dbURI = process.env.CONNECTION_URL;
+
     mongoose.connect(dbURI, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     });
 
     const db = mongoose.connection;
+
     db.on('connected', () => {
         console.log('Connected to MongoDB');
-        // Check if this is the first time connecting
-        if (db._hasOpened == null || db._hasOpened === false) {
-            console.log('Database is newly created');
-        }
-        db._hasOpened = true; // Set the flag to true after the first connection
-    });
 
+    });
 }
 
 // Call the function to connect to MongoDB
 connectToMongoDB();
+
+const port = process.env.PORT || 3000; // Use the provided PORT or default to 3000
+
+app.listen(port, () => {
+    console.log(`Server listening on port ${port}`);
+});
 
