@@ -11,8 +11,15 @@ const UserSchema = new Schema({
         required: true,
     },
     cart: {
-        items: []
-    }
+        items: [
+            {
+                productID: {
+                    type: Schema.Types.ObjectId,
+                    required: true,
+                },
+            },
+        ],
+    },
 });
 
 module.exports = mongoose.model("User", UserSchema);
