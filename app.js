@@ -8,6 +8,8 @@ const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const Order = require("./models/Order");
 const mongoose = require("mongoose");
+require('dotenv').config();
+
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -23,8 +25,8 @@ app.use(errorController.get404);
 
 
 function connectToMongoDB() {
-    const dbURI = 'mongodb://localhost:27017/nodejsmongodbudemy';
-
+    const dbURI = process.env.CONNECTION_URL;
+    console.log(dbURI);
     mongoose.connect(dbURI, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
