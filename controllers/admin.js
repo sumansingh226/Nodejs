@@ -76,11 +76,10 @@ exports.postEditProduct = async (req, res, next) => {
         req.body);
     try {
         const updatedProduct = await Product.findByIdAndUpdate(productID, payload, { new: false });
-        console.log('Product updated:', updatedProduct);
+        res.redirect("/admin/products");
     } catch (error) {
         console.error('Error updating product:', error);
     }
-    res.redirect("/admin/products");
 };
 
 exports.postDeleteProduct = (req, res, next) => {
