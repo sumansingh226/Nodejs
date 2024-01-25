@@ -70,13 +70,11 @@ exports.getCart = (req, res, next) => {
 
 exports.addToCart = (req, res, next) => {
   const { productID } = req.body;
-
   Product.findById(productID)
     .then((product) => {
       if (!product) {
         return res.status(404).send("Product not found");
       }
-
       req.user.addToCart(product);
       return req.user.save();
     })
