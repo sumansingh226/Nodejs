@@ -70,9 +70,7 @@ exports.getCart = (req, res, next) => {
 
 exports.addToCart = (req, res, next) => {
   const { productID } = req.body;
-  console.log("req.body", req.user);
 
-  // Assuming User model has a method addToCart that takes a Product instance
   Product.findById(productID)
     .then((product) => {
       if (!product) {
