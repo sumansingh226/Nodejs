@@ -41,10 +41,12 @@ UserSchema.methods.addToCart = function (product) {
     if (existingProduct) {
         existingProduct.qty += 1;
     } else {
-        this.cart.items.push({ productID: productId, qty: 1 });
+        const newProduct = { productID: productId, qty: 1 };
+        this.cart.items.push(newProduct);
     }
 
     this.cart.totalPrice += +product.price;
+
 };
 
 
