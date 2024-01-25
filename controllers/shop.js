@@ -52,9 +52,6 @@ exports.getIndex = (req, res, next) => {
 exports.getCart = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id).populate('cart.items.productID').exec();
-
-    console.log("user.cart.items", user.cart.items);
-
     res.render("shop/cart", {
       path: "/cart",
       pageTitle: "Cart Items",
