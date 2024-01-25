@@ -2,7 +2,7 @@
 const Product = require("../models/monggosProductSchema");
 
 exports.getAllProducts = (req, res, next) => {
-    Product.find()
+    Product.find().populate('userID')
         .then((products) => {
             res.render("admin/products", {
                 prods: products,
