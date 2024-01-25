@@ -35,7 +35,7 @@ UserSchema.methods.addToCart = function (product) {
     const productId = product._id;
 
     const existingProduct = this.cart.items.find((item) =>
-        item._id.equals(productId)
+        item.productID.equals(productId)
     );
 
     if (existingProduct) {
