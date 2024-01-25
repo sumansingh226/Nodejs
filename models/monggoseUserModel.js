@@ -32,8 +32,7 @@ const UserSchema = new Schema({
 });
 
 UserSchema.methods.addToCart = function (product) {
-    console.log(product);
-    const productId = product._id; // Assuming product has an _id property
+    const productId = product._id;
 
     const existingProduct = this.cart.items.find((item) =>
         item._id.equals(productId)
