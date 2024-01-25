@@ -70,8 +70,8 @@ exports.getCart = (req, res, next) => {
 
 exports.addToCart = (req, res, next) => {
   const { productID } = req.body;
-  Product.findById(productID, (product) => {
-    Cart.addToCart(product.productID, product.price);
+  Product.findById(productID).then((product) => {
+    req.user.addToCart(product);
     res.redirect("/cart");
   });
 };
