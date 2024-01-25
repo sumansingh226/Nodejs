@@ -18,8 +18,9 @@ app.set("views", "views");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use((req, res, next) => {
-    User.findById('65b2bc9b2cfc27f4b63d27ed')
+    User.findById('65b2d761f9c61f421b37f9de')
         .then((user) => {
+            console.log("user", user);
             req.user = user;
             next();
         })
@@ -43,7 +44,7 @@ const connectToMongoDB = async () => {
 
         console.log("Connected to MongoDB");
 
-        const user = await User.findById("65b2bc9b2cfc27f4b63d27ed");
+        const user = await User.findById("65b2d761f9c61f421b37f9de");
 
         if (!user) {
             const newUser = new User({
