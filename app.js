@@ -32,7 +32,7 @@ app.use(errorController.get404);
 
 async function connectToMongoDbAtls() {
     try {
-        connectToMongoDB()
+        await connectToMongoDB()
     } catch (error) {
         console.log("something went wrong while connection to database.");
 
