@@ -27,6 +27,7 @@ const connectToMongoDB = () => {
     db.on("connected", () => {
         console.log("Connected to MongoDB");
     });
+    return;
 }
 
 module.exports = connectToMongoDB;
