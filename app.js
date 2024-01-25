@@ -2,14 +2,12 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const errorController = require("./controllers/error");
-// const User = require("./models/user");
 const app = express();
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
-const Order = require("./models/Order");
-const mongoose = require("mongoose");
-const User = require("./models/monggoseUserModel")
-require('dotenv').config();
+const User = require("./models/monggoseUserModel");
+const { default: connectToMongoDB } = require("./db/MongoDbAtlas");
+const port = process.env.PORT || 3000; // Use the provided PORT or default to 3000
 
 
 app.set("view engine", "ejs");
@@ -17,7 +15,6 @@ app.set("views", "views");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
-
 app.use((req, res, next) => {
     User.findById('65b01476ce17e45f6b8944bd')
         .then((user) => {
@@ -31,48 +28,17 @@ app.use((req, res, next) => {
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
-
 app.use(errorController.get404);
 
+async function connectToMongoDbAtls() {
+    try {
+        connectToMongoDB()
+    } catch (error) {
+        console.log("something went wrong while connection to database.");
 
-
-
-
-function connectToMongoDB() {
-    const dbURI = process.env.CONNECTION_URL;
-
-    mongoose.connect(dbURI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    }).then(() => {
-        User.findById('65b01476ce17e45f6b8944bd').then((user) => {
-            if (!user) {
-                const user = new User({
-                    name: "Suman Singh",
-                    email: "suman1112@gmail.com",
-                    cart: {
-                        items: []
-                    },
-                })
-                user.save().then(() => console.log("user added"))
-            }
-
-        })
-
-
-    });
-    const db = mongoose.connection;
-
-    db.on('connected', () => {
-        console.log('Connected to MongoDB');
-
-    });
+    }
 }
-
-// Call the function to connect to MongoDB
-connectToMongoDB();
-
-const port = process.env.PORT || 3000; // Use the provided PORT or default to 3000
+connectToMongoDbAtls()
 
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
