@@ -70,10 +70,21 @@ exports.getCart = (req, res, next) => {
 
 exports.addToCart = (req, res, next) => {
   const { productID } = req.body;
-  Product.fetchById(productID, (product) => {
-    Cart.addToCart(product.productID, product.price);
-    res.redirect("/cart");
-  });
+  Product.findById(productID)
+    .then((product) => {
+      if (!product) {
+        return res.status(404).send("Product not found");
+      }
+      req.user.addToCart(product);
+      return req.user.save();
+    })
+    .then(() => {
+      res.redirect("/cart");
+    })
+    .catch((err) => {
+      console.error("Error adding to cart:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+    });
 };
 
 exports.removeFromCart = (req, res, next) => {
