@@ -15,12 +15,37 @@ const UserSchema = new Schema({
             {
                 productID: {
                     type: Schema.Types.ObjectId,
-                    ref: 'Product',
+                    ref: "Product",
                     required: true,
+                },
+                qty: {
+                    type: Number,
+                    default: 1,
                 },
             },
         ],
+        totalPrice: {
+            type: Number,
+            default: 0,
+        },
     },
 });
+
+UserSchema.methods.addToCart = function (product) {
+    const productId = product._id; // Assuming product has an _id property
+
+    const existingProduct = this.cart.items.find((item) =>
+        item.productID.equals(productId)
+    );
+
+    if (existingProduct) {
+        existingProduct.qty += 1;
+    } else {
+        this.cart.items.push({ productID: productId, qty: 1 });
+    }
+
+    this.cart.totalPrice += +product.price;
+};
+
 
 module.exports = mongoose.model("User", UserSchema);
