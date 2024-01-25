@@ -46,26 +46,20 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getCart = (req, res, next) => {
-  Product.fetchAll((products) => {
-    Cart.getAllCartItems((cart) => {
-      const matchedProducts = [];
-      for (let cartProduct of cart.products) {
-        const foundProduct = products.find(
-          (product) => product.productID == cartProduct.productID
-        );
-
-        if (foundProduct) {
-          matchedProducts.push(foundProduct);
-        }
-      }
+  req
+    .user()
+    .getCart()
+    .then((products) => {
       res.render("shop/cart", {
         path: "/cart",
         pageTitle: "Cart Items",
-        prods: matchedProducts,
-        cart: cart,
+        prods: products,
       });
+    })
+    .catch((err) => {
+      console.log("err", err);
     });
-  });
+
 };
 
 exports.addToCart = (req, res, next) => {
