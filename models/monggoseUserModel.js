@@ -15,12 +15,12 @@ const UserSchema = new Schema({
             {
                 productID: {
                     type: Schema.Types.ObjectId,
-                    ref: "Product",
+                    ref: 'Product',
                     required: true,
                 },
                 qty: {
                     type: Number,
-                    default: 1,
+                    required: true,
                 },
             },
         ],
@@ -48,6 +48,7 @@ UserSchema.methods.addToCart = function (product) {
     this.cart.totalPrice += +product.price;
 
 };
+
 
 
 module.exports = mongoose.model("User", UserSchema);

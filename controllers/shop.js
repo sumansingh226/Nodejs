@@ -1,5 +1,7 @@
 const Cart = require("../models/cart");
 const Product = require("../models/monggosProductSchema");
+const User = require("../models/monggoseUserModel");
+
 
 exports.getProducts = (req, res, next) => {
   Product.find()
@@ -45,28 +47,26 @@ exports.getIndex = (req, res, next) => {
 
 };
 
-exports.getCart = (req, res, next) => {
-  Product.fetchAll((products) => {
-    Cart.getAllCartItems((cart) => {
-      const matchedProducts = [];
-      for (let cartProduct of cart.products) {
-        const foundProduct = products.find(
-          (product) => product.productID == cartProduct.productID
-        );
 
-        if (foundProduct) {
-          matchedProducts.push(foundProduct);
-        }
-      }
-      res.render("shop/cart", {
-        path: "/cart",
-        pageTitle: "Cart Items",
-        prods: matchedProducts,
-        cart: cart,
-      });
+
+exports.getCart = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id).populate('cart.items.productID').exec();
+    res.render("shop/cart", {
+      path: "/cart",
+      pageTitle: "Cart Items",
+      prods: user.cart.items,
+      cart: user.cart
     });
-  });
+  } catch (err) {
+    console.error("err", err);
+    res.status(500).send("Internal Server Error");
+  }
 };
+
+
+
+
 
 exports.addToCart = (req, res, next) => {
   const { productID } = req.body;
