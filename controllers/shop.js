@@ -44,6 +44,32 @@ exports.getIndex = (req, res, next) => {
     });
 };
 
+exports.getProductById = (req, res, next) => {
+  const { productID } = req.params;
+  Product.findById(productID)
+    .then((product) => {
+      if (!product) {
+        return res.status(404).render("error", {
+          pageTitle: "Product Not Found",
+          errorMessage: "The requested product could not be found.",
+        });
+      }
+      const { title } = product;
+      res.render("shop/product-detail", {
+        path: "/products",
+        pageTitle: title,
+        product: product,
+      });
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).render("error", {
+        pageTitle: "Error",
+        errorMessage: "An error occurred while fetching the product.",
+      });
+    });
+};
+
 exports.getCart = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id)
@@ -106,28 +132,5 @@ exports.getCheckout = (req, res, next) => {
     pageTitle: "Checkout",
   });
 };
-exports.getProductById = (req, res, next) => {
-  const { productID } = req.params;
-  Product.findById(productID)
-    .then((product) => {
-      if (!product) {
-        return res.status(404).render("error", {
-          pageTitle: "Product Not Found",
-          errorMessage: "The requested product could not be found.",
-        });
-      }
-      const { title } = product;
-      res.render("shop/product-detail", {
-        path: "/products",
-        pageTitle: title,
-        product: product,
-      });
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).render("error", {
-        pageTitle: "Error",
-        errorMessage: "An error occurred while fetching the product.",
-      });
-    });
-};
+
+
