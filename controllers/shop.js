@@ -81,9 +81,9 @@ exports.addToCart = (req, res, next) => {
 };
 
 exports.removeFromCart = (req, res, next) => {
-  const { productID } = req.body;
+  const { productID, price } = req.body;
   req.user
-    .removeItemsFromcart(productID)
+    .removeItemsFromcart(productID, price)
     .then(() => {
       res.redirect("/cart");
     })

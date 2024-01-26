@@ -49,20 +49,13 @@ UserSchema.methods.addToCart = function (product) {
 
 };
 
-UserSchema.methods.removeItemsFromcart = function (productId) {
+UserSchema.methods.removeItemsFromcart = function (productId, price) {
     const updatedCartItems = this.cart.items.filter((item) => {
-        return !item.productID.equals(productId);
+        return item.productID.equals(productId);
     });
-
-    const updatedTotalPrice = updatedCartItems.reduce((total, item) => {
-        const itemPrice = parseFloat(item.price) || 0;
-
-        return total + itemPrice * item.qty;
-    }, 0);
-
+    const updatedTotalPrice = updatedCartItems[0].qty * price;
     this.cart.items = updatedCartItems;
-    this.cart.totalPrice = updatedTotalPrice;
-
+    this.cart.totalPrice = this.cart.totalPrice - updatedTotalPrice;
     return this.save();
 };
 
