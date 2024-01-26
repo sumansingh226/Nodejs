@@ -127,7 +127,7 @@ exports.getOrders = (req, res, next) => {
   });
 };
 
-exports.postCheckout = (req, res, next) => {
+exports.postCheckout = async (req, res, next) => {
   await User.findById(req.user._id)
     .populate("cart.items.productID")
     .exec().then((user) => {
@@ -139,10 +139,8 @@ exports.postCheckout = (req, res, next) => {
         },
         product: products
       })
+      order.save()
     })
-
-
-
   res.render("shop/checkout", {
     path: "/checkout",
     pageTitle: "Checkout",
