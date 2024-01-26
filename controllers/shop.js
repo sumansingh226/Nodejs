@@ -136,7 +136,8 @@ exports.postCheckout = (req, res, next) => {
         user: {
           name: req.user.name,
           userId: req.user
-        }
+        },
+        product: products
       })
     })
 
