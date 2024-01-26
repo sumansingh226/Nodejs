@@ -49,14 +49,22 @@ UserSchema.methods.addToCart = function (product) {
 
 };
 
-UserSchema.methods.removeItemFromcart = function (productId) {
-    const updatedCartItems = this.cart.items.filter((items) => {
-        return items.productID.equals(productId);
+UserSchema.methods.removeItemsFromcart = function (productId) {
+    const updatedCartItems = this.cart.items.filter((item) => {
+        return !item.productID.equals(productId);
     });
 
-    this.cart.items = updatedCartItems;
-    return this.save();
+    const updatedTotalPrice = updatedCartItems.reduce((total, item) => {
+        const itemPrice = parseFloat(item.price) || 0;
 
-}
+        return total + itemPrice * item.qty;
+    }, 0);
+
+    this.cart.items = updatedCartItems;
+    this.cart.totalPrice = updatedTotalPrice;
+
+    return this.save();
+};
+
 
 module.exports = mongoose.model("User", UserSchema);
