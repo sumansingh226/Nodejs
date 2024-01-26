@@ -65,9 +65,6 @@ exports.getCart = async (req, res, next) => {
 };
 
 
-
-
-
 exports.addToCart = (req, res, next) => {
   const { productID } = req.body;
   Product.findById(productID)
@@ -89,10 +86,11 @@ exports.addToCart = (req, res, next) => {
 
 exports.removeFromCart = (req, res, next) => {
   const { productID } = req.body;
-  Product.fetchById(productID, (product) => {
-    Cart.removeFromCart(product.productID, product.price);
+  console.log("redbody productID", productID);
+  req.user.removeItemFromcart(productID).then(() => {
     res.redirect("/cart");
-  });
+
+  })
 };
 
 exports.getOrders = (req, res, next) => {
