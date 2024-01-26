@@ -27,9 +27,11 @@
                                     </p>
                                 </div>
                                 <div class="card__actions">
-                                    <a href="/order/<%= product.productID %>?edit=true" class="btn">Checkout</a>
+                                    <a href="/order/<%=  product.productID._id %>?edit=true" class="btn">Checkout</a>
                                     <form action="/remove-cart" method="POST">
-                                        <input type="hidden" name="productID" id="productID" value="<%= product.productID %>">
+                                        <input type="hidden" name="productID" id="productID" value="<%= product.productID._id  %>">
+                                        <input type="hidden" name="price" id="productID" value="<%= product.productID.price  %>">
+
                                         <button class="btn" type="submit">Remove</button>
                                     </form>                                
 

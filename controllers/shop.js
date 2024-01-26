@@ -2,7 +2,6 @@ const Cart = require("../models/cart");
 const Product = require("../models/monggosProductSchema");
 const User = require("../models/monggoseUserModel");
 
-
 exports.getProducts = (req, res, next) => {
   Product.find()
     .then((products) => {
@@ -22,7 +21,6 @@ exports.getProducts = (req, res, next) => {
         errorMessage: "An error occurred while fetching the products.",
       });
     });
-
 };
 
 exports.getIndex = (req, res, next) => {
@@ -44,29 +42,24 @@ exports.getIndex = (req, res, next) => {
         errorMessage: "An error occurred while fetching the products.",
       });
     });
-
 };
-
-
 
 exports.getCart = async (req, res, next) => {
   try {
-    const user = await User.findById(req.user._id).populate('cart.items.productID').exec();
+    const user = await User.findById(req.user._id)
+      .populate("cart.items.productID")
+      .exec();
     res.render("shop/cart", {
       path: "/cart",
       pageTitle: "Cart Items",
       prods: user.cart.items,
-      cart: user.cart
+      cart: user.cart,
     });
   } catch (err) {
     console.error("err", err);
     res.status(500).send("Internal Server Error");
   }
 };
-
-
-
-
 
 exports.addToCart = (req, res, next) => {
   const { productID } = req.body;
@@ -88,11 +81,16 @@ exports.addToCart = (req, res, next) => {
 };
 
 exports.removeFromCart = (req, res, next) => {
-  const { productID } = req.body;
-  Product.fetchById(productID, (product) => {
-    Cart.removeFromCart(product.productID, product.price);
-    res.redirect("/cart");
-  });
+  const { productID, price } = req.body;
+  req.user
+    .removeItemsFromcart(productID, price)
+    .then(() => {
+      res.redirect("/cart");
+    })
+    .catch((error) => {
+      console.error("Error removing item from cart:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    });
 };
 
 exports.getOrders = (req, res, next) => {

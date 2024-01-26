@@ -49,6 +49,15 @@ UserSchema.methods.addToCart = function (product) {
 
 };
 
+UserSchema.methods.removeItemsFromcart = function (productId, price) {
+    const updatedCartItems = this.cart.items.filter((item) => {
+        return item.productID.equals(productId);
+    });
+    const updatedTotalPrice = updatedCartItems[0].qty * price;
+    this.cart.items = updatedCartItems;
+    this.cart.totalPrice = this.cart.totalPrice - updatedTotalPrice;
+    return this.save();
+};
 
 
 module.exports = mongoose.model("User", UserSchema);
