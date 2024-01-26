@@ -1,6 +1,7 @@
 const Cart = require("../models/cart");
 const Product = require("../models/monggosProductSchema");
 const User = require("../models/monggoseUserModel");
+const Order = require("../models/mongooseOrderModel")
 
 exports.getProducts = (req, res, next) => {
   Product.find()
@@ -40,6 +41,32 @@ exports.getIndex = (req, res, next) => {
       res.status(500).render("error", {
         pageTitle: "Error",
         errorMessage: "An error occurred while fetching the products.",
+      });
+    });
+};
+
+exports.getProductById = (req, res, next) => {
+  const { productID } = req.params;
+  Product.findById(productID)
+    .then((product) => {
+      if (!product) {
+        return res.status(404).render("error", {
+          pageTitle: "Product Not Found",
+          errorMessage: "The requested product could not be found.",
+        });
+      }
+      const { title } = product;
+      res.render("shop/product-detail", {
+        path: "/products",
+        pageTitle: title,
+        product: product,
+      });
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).render("error", {
+        pageTitle: "Error",
+        errorMessage: "An error occurred while fetching the product.",
       });
     });
 };
@@ -100,34 +127,24 @@ exports.getOrders = (req, res, next) => {
   });
 };
 
-exports.getCheckout = (req, res, next) => {
+exports.postCheckout = async (req, res, next) => {
+  await User.findById(req.user._id)
+    .populate("cart.items.productID")
+    .exec().then((user) => {
+      const products = user.cart.items.map(item => ({ quantity: item.quantity, product: item.productID }));
+      const order = new Order({
+        user: {
+          name: req.user.name,
+          userId: req.user
+        },
+        product: products
+      })
+      order.save()
+    })
   res.render("shop/checkout", {
     path: "/checkout",
     pageTitle: "Checkout",
   });
 };
-exports.getProductById = (req, res, next) => {
-  const { productID } = req.params;
-  Product.findById(productID)
-    .then((product) => {
-      if (!product) {
-        return res.status(404).render("error", {
-          pageTitle: "Product Not Found",
-          errorMessage: "The requested product could not be found.",
-        });
-      }
-      const { title } = product;
-      res.render("shop/product-detail", {
-        path: "/products",
-        pageTitle: title,
-        product: product,
-      });
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).render("error", {
-        pageTitle: "Error",
-        errorMessage: "An error occurred while fetching the product.",
-      });
-    });
-};
+
+
