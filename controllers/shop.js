@@ -1,6 +1,7 @@
 const Cart = require("../models/cart");
 const Product = require("../models/monggosProductSchema");
 const User = require("../models/monggoseUserModel");
+const Order = require("../models/mongooseOrderModel")
 
 exports.getProducts = (req, res, next) => {
   Product.find()
@@ -126,7 +127,21 @@ exports.getOrders = (req, res, next) => {
   });
 };
 
-exports.getCheckout = (req, res, next) => {
+exports.postCheckout = (req, res, next) => {
+  await User.findById(req.user._id)
+    .populate("cart.items.productID")
+    .exec().then((user) => {
+
+      const order = new Order({
+        user: {
+          name: req.user.name,
+          userId: req.user
+        }
+      })
+    })
+
+
+
   res.render("shop/checkout", {
     path: "/checkout",
     pageTitle: "Checkout",
