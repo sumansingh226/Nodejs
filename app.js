@@ -10,15 +10,13 @@ const port = process.env.PORT || 3000; // Use the provided PORT or default to 30
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-
-
 app.set("view engine", "ejs");
 app.set("views", "views");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use((req, res, next) => {
-    User.findById('65b2d761f9c61f421b37f9de')
+    User.findById("65b2d761f9c61f421b37f9de")
         .then((user) => {
             console.log("user", user);
             req.user = user;
@@ -41,11 +39,8 @@ const connectToMongoDB = async () => {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-
         console.log("Connected to MongoDB");
-
         const user = await User.findById("65b2d761f9c61f421b37f9de");
-
         if (!user) {
             const newUser = new User({
                 name: "Suman Singh",
@@ -58,7 +53,6 @@ const connectToMongoDB = async () => {
             await newUser.save();
             console.log("User added");
         }
-
     } catch (error) {
         console.error("Error connecting to MongoDB:", error);
     }
@@ -66,8 +60,6 @@ const connectToMongoDB = async () => {
 
 connectToMongoDB();
 
-
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });
-
