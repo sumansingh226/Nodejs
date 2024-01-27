@@ -127,7 +127,7 @@ exports.getOrders = async (req, res, next) => {
     res.render("shop/orders", {
       path: "/orders",
       pageTitle: "My  Orders",
-      data: products,
+      orders: products,
     });
   } catch (error) {
     console.error("Error in getOrders:", error);
