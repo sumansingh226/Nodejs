@@ -60,8 +60,17 @@ UserSchema.methods.removeItemsFromcart = function (productId, price) {
 };
 
 UserSchema.methods.clearCartOnOrder = async function () {
-    this.cart = [{}];
-    return await this.save();
-}
+    this.cart.items = [];
+    this.cart.totalPrice = 0;
+    try {
+        const result = await this.save();
+        console.log("Save operation result:", result);
+        return result;
+    } catch (error) {
+        console.error("Error in clearCartOnOrder:", error);
+        throw error;
+    }
+};
+
 
 module.exports = mongoose.model("User", UserSchema);

@@ -136,7 +136,7 @@ exports.postCheckout = async (req, res, next) => {
       .exec();
 
     const products = user.cart.items.map((item) => ({
-      quantity: item.quantity,
+      quantity: item.qty,
       product: { ...item.productID._doc },
     }));
 
