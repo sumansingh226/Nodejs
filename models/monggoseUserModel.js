@@ -60,7 +60,7 @@ UserSchema.methods.removeItemsFromcart = function (productId, price) {
 };
 
 UserSchema.methods.clearCartOnOrder = function () {
-    this.cart = [{}]
+    this.cart = [{}];
     return this.save();
 }
 
