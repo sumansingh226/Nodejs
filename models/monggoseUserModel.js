@@ -53,7 +53,6 @@ UserSchema.methods.removeItemsFromcart = function (productId, price) {
     const updatedCartItems = this.cart.items.filter((item) => {
         return item.productID.equals(productId);
     });
-    console.log("updatedCartItems", updatedCartItems);
     const updatedTotalPrice = updatedCartItems[0]?.qty || 1 * price;
     this.cart.items = updatedCartItems;
     this.cart.totalPrice = this.cart.totalPrice - updatedTotalPrice;
