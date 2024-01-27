@@ -120,12 +120,25 @@ exports.removeFromCart = (req, res, next) => {
     });
 };
 
-exports.getOrders = (req, res, next) => {
-  res.render("shop/orders", {
-    path: "/orders",
-    pageTitle: "My  Orders",
-  });
+exports.getOrders = async (req, res, next) => {
+  try {
+    const products = await Order.find({ "user.userId": req.user._id });
+
+    res.render("shop/orders", {
+      path: "/orders",
+      pageTitle: "My  Orders",
+      data: products,
+    });
+  } catch (error) {
+    console.error("Error in getOrders:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
 };
+
 
 exports.postCheckout = async (req, res, next) => {
   try {
