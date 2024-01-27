@@ -1,50 +1,36 @@
 <%- include('../includes/head.ejs') %>
-    <link rel="stylesheet" href="/css/product.css">
-    </head>
+<link rel="stylesheet" href="/css/cart.css">
+</head>
 
-    <body>
-        <%- include('../includes/navigation.ejs') %>
+<body>
+    <%- include('../includes/navigation.ejs') %>
+    <main>
+        <% if (prods.length > 0) { %>
+        <ul class="cart__item-list">
+            <% prods.forEach(product => { %>
+            <li class="cart__item">
+                <h1>                                        <%= product.productID.title %>
+                </h1>
+                <h2>Quantity: <%= product.quantity %></h2>
+                <form action="/remove-cart" method="POST">
+                    <input type="hidden" value="<%= product.productID._id %>" name="productId">
+                    <input type="hidden" name="price" id="productID" value="<%= product.productID.price  %>">
 
-            <main>
-                <% if (prods.length > 0) { %>
-                    <div class="grid">
-                        <% for (let product of prods) { %>
-                            <article class="card product-item">
-                                <header class="card__header">
-                                    <h1 class="product__title">
-                                        <%= product.productID.title %>
-                                    </h1>
-                                </header>
-                                <div class="card__image">
-                                    <img src="<%= product.productID.image %>" alt="<%= product.title %>">
-                                </div>
-                                <div class="card__content">
-                                    <h2 class="product__price">$
-                                        <%= product.productID.price %>
-                                    </h2>
-                                    <p class="product__description">
-                                        <%= product.productID.description %>
-                                    </p>
-                                </div>
-                                <div class="card__actions">
-                                    <a href="/order/<%=  product.productID._id %>?edit=true" class="btn">Checkout</a>
-                                    <form action="/remove-cart" method="POST">
-                                        <input type="hidden" name="productID" id="productID" value="<%= product.productID._id  %>">
-                                        <input type="hidden" name="price" id="productID" value="<%= product.productID.price  %>">
+                    <button class="btn danger" type="submit">Delete</button>
+                </form>
+            </li>
+            <% }) %>
+        </ul>
+        <hr>
+        <div class="centered">
+            <form action="/create-order" method="POST">
+                <button type="submit" class="btn">Order Now!</button>
+            </form>
+        </div>
 
-                                        <button class="btn" type="submit">Remove</button>
-                                    </form>                                
-
-                                </div>
-                            </article>
-                            <% } %>
-                            <div class="total-price-section">
-                                <h2>Total Price:</h2>
-                                <p class="total-price">$<%= cart.totalPrice %></p>
-                            </div>
-                    </div>
-                    <% } else { %>
-                        <h1>No Products Found!</h1>
-                        <% } %>
-            </main>
-            <%- include('../includes/end.ejs') %>
+        <% } else { %>
+        <h1>No Products in Cart!</h1>
+        <% } %>
+    </main>
+    <%- include('../includes/end.ejs') %>
+</body>
