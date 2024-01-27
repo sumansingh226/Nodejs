@@ -1,4 +1,9 @@
 const express = require("express");
 
 
-const Router = express.Router();
+const router = express.Router();
+
+router.get("/login", (req, res, next) => {
+
+})
+module.exports = router;
