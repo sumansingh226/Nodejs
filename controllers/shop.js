@@ -1,7 +1,7 @@
 const Cart = require("../models/cart");
 const Product = require("../models/monggosProductSchema");
 const User = require("../models/monggoseUserModel");
-const Order = require("../models/mongooseOrderModel")
+const Order = require("../models/mongooseOrderModel");
 
 exports.getProducts = (req, res, next) => {
   Product.find()
@@ -120,31 +120,66 @@ exports.removeFromCart = (req, res, next) => {
     });
 };
 
-exports.getOrders = (req, res, next) => {
-  res.render("shop/orders", {
-    path: "/orders",
-    pageTitle: "My  Orders",
-  });
+exports.getOrders = async (req, res, next) => {
+  try {
+    const products = await Order.find({ "user.userId": req.user._id });
+
+    res.render("shop/orders", {
+      path: "/orders",
+      pageTitle: "My  Orders",
+      orders: products,
+    });
+  } catch (error) {
+    console.error("Error in getOrders:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
 };
+
 
 exports.postCheckout = async (req, res, next) => {
-  await User.findById(req.user._id)
-    .populate("cart.items.productID")
-    .exec().then((user) => {
-      const products = user.cart.items.map(item => ({ quantity: item.quantity, product: item.productID }));
-      const order = new Order({
-        user: {
-          name: req.user.name,
-          userId: req.user
-        },
-        product: products
-      })
-      order.save()
-    })
-  res.render("shop/checkout", {
-    path: "/checkout",
-    pageTitle: "Checkout",
-  });
-};
+  try {
+    const user = await User.findById(req.user._id)
+      .populate("cart.items.productID")
+      .exec();
+    const products = user.cart.items.map((item) => ({
+      quantity: item.qty,
+      product: { ...item.productID._doc },
+    }));
 
+    const order = new Order({
+      user: {
+        name: req.user.name,
+        userId: req.user,
+      },
+      products: products,
+    });
+
+    const [orderSaveResult, clearCartResult] = await Promise.allSettled([
+      order.save(),
+      req.user.clearCartOnOrder()
+    ]);
+
+    if (orderSaveResult.status === "fulfilled") {
+      console.log("Order saved successfully");
+    } else {
+      console.error("Error saving order:", orderSaveResult.reason);
+    }
+    if (clearCartResult.status === "fulfilled") {
+      console.log("Cart cleared successfully");
+    } else {
+      console.error("Error clearing cart:", clearCartResult.reason);
+    }
+    res.render("shop/orders", {
+      path: "/orders",
+      pageTitle: "My Orders",
+    });
+  } catch (error) {
+    console.error("Error in postCheckout:", error);
+    next(error);
+  }
+};
 

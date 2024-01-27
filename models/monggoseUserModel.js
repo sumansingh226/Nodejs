@@ -53,10 +53,23 @@ UserSchema.methods.removeItemsFromcart = function (productId, price) {
     const updatedCartItems = this.cart.items.filter((item) => {
         return item.productID.equals(productId);
     });
-    const updatedTotalPrice = updatedCartItems[0].qty * price;
+    const updatedTotalPrice = updatedCartItems[0]?.qty || 1 * price;
     this.cart.items = updatedCartItems;
     this.cart.totalPrice = this.cart.totalPrice - updatedTotalPrice;
     return this.save();
+};
+
+UserSchema.methods.clearCartOnOrder = async function () {
+    this.cart.items = [];
+    this.cart.totalPrice = 0;
+    try {
+        const result = await this.save();
+        console.log("Save operation result:", result);
+        return result;
+    } catch (error) {
+        console.error("Error in clearCartOnOrder:", error);
+        throw error;
+    }
 };
 
 
