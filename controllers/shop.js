@@ -127,11 +127,14 @@ exports.getOrders = (req, res, next) => {
   });
 };
 
+
+
 exports.postCheckout = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id)
       .populate("cart.items.productID")
       .exec();
+
     const products = user.cart.items.map((item) => ({
       quantity: item.quantity,
       product: { ...item.productID._doc },
@@ -142,18 +145,18 @@ exports.postCheckout = async (req, res, next) => {
         name: req.user.name,
         userId: req.user,
       },
-      products: products, // Corrected property name to 'products'
+      products: products,
     });
 
     await order.save(); // Wait for the order to be saved
+    await req.user.clearCartOnOrder(); // Wait for the cart to be cleared
 
     res.render("shop/orders", {
       path: "/orders",
       pageTitle: "My Orders",
     });
   } catch (error) {
-    // Handle any errors that occur during the process
     console.error("Error in postCheckout:", error);
-    next(error); // Pass the error to the next middleware for handling
+    next(error);
   }
 };

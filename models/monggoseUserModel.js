@@ -59,9 +59,9 @@ UserSchema.methods.removeItemsFromcart = function (productId, price) {
     return this.save();
 };
 
-UserSchema.methods.clearCartOnOrder = function () {
+UserSchema.methods.clearCartOnOrder = async function () {
     this.cart = [{}];
-    return this.save();
+    return await this.save();
 }
 
 module.exports = mongoose.model("User", UserSchema);
