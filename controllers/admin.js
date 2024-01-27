@@ -11,6 +11,7 @@ exports.getAllProducts = (req, res, next) => {
                 hasProducts: products.length > 0,
                 activeShop: true,
                 productCSS: true,
+                isAuthenticated: req.IsLoggedIn
             });
         })
         .catch((err) => {
@@ -62,6 +63,7 @@ exports.getEditProduct = async (req, res, next) => {
             activeAddProduct: true,
             editing: editMode,
             product: product,
+            isAuthenticated: req.IsLoggedIn
         });
     } catch (err) {
         console.log("Error:", err);

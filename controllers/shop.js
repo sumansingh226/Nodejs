@@ -13,6 +13,7 @@ exports.getProducts = (req, res, next) => {
         hasProducts: products.length > 0,
         activeShop: true,
         productCSS: true,
+        isAuthenticated: req.IsLoggedIn
       });
     })
     .catch((err) => {
@@ -34,6 +35,7 @@ exports.getIndex = (req, res, next) => {
         hasProducts: products.length > 0,
         activeShop: true,
         productCSS: true,
+        isAuthenticated: req.IsLoggedIn
       });
     })
     .catch((err) => {
@@ -60,6 +62,7 @@ exports.getProductById = (req, res, next) => {
         path: "/products",
         pageTitle: title,
         product: product,
+        isAuthenticated: req.IsLoggedIn
       });
     })
     .catch((err) => {
@@ -81,6 +84,7 @@ exports.getCart = async (req, res, next) => {
       pageTitle: "Cart Items",
       prods: user.cart.items,
       cart: user.cart,
+      isAuthenticated: req.IsLoggedIn
     });
   } catch (err) {
     console.error("err", err);
@@ -100,6 +104,7 @@ exports.addToCart = (req, res, next) => {
     })
     .then(() => {
       res.redirect("/cart");
+
     })
     .catch((err) => {
       console.error("Error adding to cart:", err);
@@ -128,6 +133,7 @@ exports.getOrders = async (req, res, next) => {
       path: "/orders",
       pageTitle: "My  Orders",
       orders: products,
+      isAuthenticated: req.IsLoggedIn
     });
   } catch (error) {
     console.error("Error in getOrders:", error);
@@ -176,6 +182,7 @@ exports.postCheckout = async (req, res, next) => {
     res.render("shop/orders", {
       path: "/orders",
       pageTitle: "My Orders",
+      isAuthenticated: req.IsLoggedIn
     });
   } catch (error) {
     console.error("Error in postCheckout:", error);
