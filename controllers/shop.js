@@ -131,7 +131,7 @@ exports.postCheckout = async (req, res, next) => {
   await User.findById(req.user._id)
     .populate("cart.items.productID")
     .exec().then((user) => {
-      const products = user.cart.items.map(item => ({ quantity: item.quantity, product: item.productID }));
+      const products = user.cart.items.map(item => ({ quantity: item.quantity, product: { ...item.productID.doc } }));
       const order = new Order({
         user: {
           name: req.user.name,
@@ -141,9 +141,9 @@ exports.postCheckout = async (req, res, next) => {
       })
       order.save()
     })
-  res.render("shop/checkout", {
-    path: "/checkout",
-    pageTitle: "Checkout",
+  res.render("shop/orders", {
+    path: "/orders",
+    pageTitle: "My  Orders",
   });
 };
 
