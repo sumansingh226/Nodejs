@@ -1,7 +1,7 @@
 const Cart = require("../models/cart");
 const Product = require("../models/monggosProductSchema");
 const User = require("../models/monggoseUserModel");
-const Order = require("../models/mongooseOrderModel")
+const Order = require("../models/mongooseOrderModel");
 
 exports.getProducts = (req, res, next) => {
   Product.find()
@@ -128,23 +128,32 @@ exports.getOrders = (req, res, next) => {
 };
 
 exports.postCheckout = async (req, res, next) => {
-  await User.findById(req.user._id)
-    .populate("cart.items.productID")
-    .exec().then((user) => {
-      const products = user.cart.items.map(item => ({ quantity: item.quantity, product: { ...item.productID.doc } }));
-      const order = new Order({
-        user: {
-          name: req.user.name,
-          userId: req.user
-        },
-        product: products
-      })
-      order.save()
-    })
-  res.render("shop/orders", {
-    path: "/orders",
-    pageTitle: "My  Orders",
-  });
+  try {
+    const user = await User.findById(req.user._id)
+      .populate("cart.items.productID")
+      .exec();
+    const products = user.cart.items.map((item) => ({
+      quantity: item.quantity,
+      product: { ...item.productID._doc },
+    }));
+
+    const order = new Order({
+      user: {
+        name: req.user.name,
+        userId: req.user,
+      },
+      products: products, // Corrected property name to 'products'
+    });
+
+    await order.save(); // Wait for the order to be saved
+
+    res.render("shop/orders", {
+      path: "/orders",
+      pageTitle: "My Orders",
+    });
+  } catch (error) {
+    // Handle any errors that occur during the process
+    console.error("Error in postCheckout:", error);
+    next(error); // Pass the error to the next middleware for handling
+  }
 };
-
-
