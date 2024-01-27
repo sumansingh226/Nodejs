@@ -148,8 +148,8 @@ exports.postCheckout = async (req, res, next) => {
       products: products,
     });
 
-    await order.save(); // Wait for the order to be saved
-    await req.user.clearCartOnOrder(); // Wait for the cart to be cleared
+    await order.save();
+    await req.user.clearCartOnOrder();
 
     res.render("shop/orders", {
       path: "/orders",
