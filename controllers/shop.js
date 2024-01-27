@@ -127,14 +127,11 @@ exports.getOrders = (req, res, next) => {
   });
 };
 
-
-
 exports.postCheckout = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id)
       .populate("cart.items.productID")
       .exec();
-
     const products = user.cart.items.map((item) => ({
       quantity: item.qty,
       product: { ...item.productID._doc },
@@ -148,9 +145,21 @@ exports.postCheckout = async (req, res, next) => {
       products: products,
     });
 
-    await order.save();
-    await req.user.clearCartOnOrder();
+    const [orderSaveResult, clearCartResult] = await Promise.allSettled([
+      order.save(),
+      req.user.clearCartOnOrder()
+    ]);
 
+    if (orderSaveResult.status === "fulfilled") {
+      console.log("Order saved successfully");
+    } else {
+      console.error("Error saving order:", orderSaveResult.reason);
+    }
+    if (clearCartResult.status === "fulfilled") {
+      console.log("Cart cleared successfully");
+    } else {
+      console.error("Error clearing cart:", clearCartResult.reason);
+    }
     res.render("shop/orders", {
       path: "/orders",
       pageTitle: "My Orders",
@@ -160,3 +169,4 @@ exports.postCheckout = async (req, res, next) => {
     next(error);
   }
 };
+
