@@ -13,7 +13,9 @@ const session = require("express-session")
 const MogngoDbSession = require("connect-mongodb-session");
 
 const app = express();
-const mongoDbStore = MogngoDbSession();
+const mongoDbStore = MogngoDbSession({
+    uri: process.env.CONNECTION_URL;
+});
 
 app.set("view engine", "ejs");
 app.set("views", "views");
