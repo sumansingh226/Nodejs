@@ -2,7 +2,6 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const errorController = require("./controllers/error");
-const app = express();
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const authRoutes = require("./routes/auth")
@@ -11,7 +10,10 @@ const port = process.env.PORT || 3000; // Use the provided PORT or default to 30
 const mongoose = require("mongoose");
 require("dotenv").config();
 const session = require("express-session")
-const MognoDbSession = require("connect-mongodb-session");
+const MogngoDbSession = require("connect-mongodb-session");
+
+const app = express();
+const mongoDbStore = MogngoDbSession();
 
 app.set("view engine", "ejs");
 app.set("views", "views");
