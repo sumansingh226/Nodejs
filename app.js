@@ -14,7 +14,8 @@ const MogngoDbSession = require("connect-mongodb-session");
 
 const app = express();
 const mongoDbStore = MogngoDbSession({
-    uri: process.env.CONNECTION_URL;
+    uri: process.env.CONNECTION_URL,
+    collection: 'session'
 });
 
 app.set("view engine", "ejs");
