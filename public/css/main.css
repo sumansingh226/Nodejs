@@ -45,6 +45,15 @@ form {
   margin: 0 1rem;
   padding: 0;
 }
+.logout{
+  text-decoration: none;
+  background: #00695c;
+  background-color: none;
+  border: none;
+  color: white;
+  margin: 0 1rem;
+  padding: 0;
+}
 
 .main-header__item a {
   text-decoration: none;

@@ -13,7 +13,7 @@ exports.getProducts = (req, res, next) => {
         hasProducts: products.length > 0,
         activeShop: true,
         productCSS: true,
-        isAuthenticated: req.IsLoggedIn
+        isAuthenticated: req.IsLoggedIn,
       });
     })
     .catch((err) => {
@@ -28,6 +28,7 @@ exports.getProducts = (req, res, next) => {
 exports.getIndex = (req, res, next) => {
   Product.find()
     .then((products) => {
+      console.log("req.IsLoggedIn", req.IsLoggedIn);
       res.render("shop/index", {
         prods: products,
         pageTitle: "Shop",
@@ -35,7 +36,7 @@ exports.getIndex = (req, res, next) => {
         hasProducts: products.length > 0,
         activeShop: true,
         productCSS: true,
-        isAuthenticated: req.IsLoggedIn
+        isAuthenticated: req.IsLoggedIn,
       });
     })
     .catch((err) => {
@@ -62,7 +63,7 @@ exports.getProductById = (req, res, next) => {
         path: "/products",
         pageTitle: title,
         product: product,
-        isAuthenticated: req.IsLoggedIn
+        isAuthenticated: req.IsLoggedIn,
       });
     })
     .catch((err) => {
@@ -84,7 +85,7 @@ exports.getCart = async (req, res, next) => {
       pageTitle: "Cart Items",
       prods: user.cart.items,
       cart: user.cart,
-      isAuthenticated: req.IsLoggedIn
+      isAuthenticated: req.IsLoggedIn,
     });
   } catch (err) {
     console.error("err", err);
@@ -104,7 +105,6 @@ exports.addToCart = (req, res, next) => {
     })
     .then(() => {
       res.redirect("/cart");
-
     })
     .catch((err) => {
       console.error("Error adding to cart:", err);
@@ -133,7 +133,7 @@ exports.getOrders = async (req, res, next) => {
       path: "/orders",
       pageTitle: "My  Orders",
       orders: products,
-      isAuthenticated: req.IsLoggedIn
+      isAuthenticated: req.IsLoggedIn,
     });
   } catch (error) {
     console.error("Error in getOrders:", error);
@@ -144,7 +144,6 @@ exports.getOrders = async (req, res, next) => {
     });
   }
 };
-
 
 exports.postCheckout = async (req, res, next) => {
   try {
@@ -166,7 +165,7 @@ exports.postCheckout = async (req, res, next) => {
 
     const [orderSaveResult, clearCartResult] = await Promise.allSettled([
       order.save(),
-      req.user.clearCartOnOrder()
+      req.user.clearCartOnOrder(),
     ]);
 
     if (orderSaveResult.status === "fulfilled") {
@@ -182,11 +181,10 @@ exports.postCheckout = async (req, res, next) => {
     res.render("shop/orders", {
       path: "/orders",
       pageTitle: "My Orders",
-      isAuthenticated: req.IsLoggedIn
+      isAuthenticated: req.IsLoggedIn,
     });
   } catch (error) {
     console.error("Error in postCheckout:", error);
     next(error);
   }
 };
-
