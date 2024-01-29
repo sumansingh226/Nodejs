@@ -4,18 +4,18 @@ const bodyParser = require("body-parser");
 const errorController = require("./controllers/error");
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
-const authRoutes = require("./routes/auth")
+const authRoutes = require("./routes/auth");
 const User = require("./models/monggoseUserModel");
 const port = process.env.PORT || 3000;
 const mongoose = require("mongoose");
 require("dotenv").config();
-const session = require("express-session")
-const MongoDBStore = require('connect-mongodb-session')(session);
+const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
 
 const app = express();
 const store = new MongoDBStore({
     uri: process.env.SESSION_CONNECTION_URL,
-    collection: 'session'
+    collection: "session",
 });
 
 app.set("view engine", "ejs");
@@ -23,7 +23,13 @@ app.set("views", "views");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
-app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false }))
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+    })
+);
 app.use((req, res, next) => {
     User.findById("65b2d761f9c61f421b37f9de")
         .then((user) => {
@@ -37,7 +43,7 @@ app.use((req, res, next) => {
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
-app.use(authRoutes)
+app.use(authRoutes);
 app.use(errorController.get404);
 
 const connectToMongoDB = async () => {
