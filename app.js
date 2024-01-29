@@ -17,6 +17,7 @@ app.set("views", "views");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(session({ secret: "as@$#@%=-032NB*/-/*23/223/*-@#/@*&@&*(#@)*", resave: false, saveUninitialized: false }))
 app.use((req, res, next) => {
     User.findById("65b2d761f9c61f421b37f9de")
         .then((user) => {
