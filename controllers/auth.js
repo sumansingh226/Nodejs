@@ -1,3 +1,5 @@
+const monggoseUserModel = require("../models/monggoseUserModel");
+
 exports.getLogin = (req, res, next) => {
     res.render("auth/login", {
         path: "/login",
@@ -8,8 +10,13 @@ exports.getLogin = (req, res, next) => {
 
 exports.postLogin = (req, res, next) => {
     res.setHeader('Set-Cookie', 'loggedIn=true; Max-Age=10; HttpOnly')
-    req.session.isLoggedIn = true;
-    res.redirect("/")
+    monggoseUserModel.findById('65b2d761f9c61f421b37f9de')
+        .then(user => {
+            console.log(user);
+            req.session.isLoggedIn = true;
+            req.session.user = user;
+            res.redirect('/');
+        })
 };
 
 exports.postLogOut = (req, res, next) => {

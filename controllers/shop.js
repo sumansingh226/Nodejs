@@ -28,6 +28,7 @@ exports.getProducts = (req, res, next) => {
 exports.getIndex = (req, res, next) => {
   Product.find()
     .then((products) => {
+      console.log("req.IsLoggedIn", req.IsLoggedIn);
       res.render("shop/index", {
         prods: products,
         pageTitle: "Shop",
