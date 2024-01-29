@@ -10,11 +10,11 @@ const port = process.env.PORT || 3000; // Use the provided PORT or default to 30
 const mongoose = require("mongoose");
 require("dotenv").config();
 const session = require("express-session")
-const MogngoDbSession = require("connect-mongodb-session");
+const MongoDBStore = require('connect-mongodb-session')(session);
 
 const app = express();
-const mongoDbStore = MogngoDbSession({
-    uri: process.env.CONNECTION_URL,
+const store = new MongoDBStore({
+    uri: process.env.SESSION_CONNECTION_URL,
     collection: 'session'
 });
 
