@@ -6,7 +6,7 @@ const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const authRoutes = require("./routes/auth")
 const User = require("./models/monggoseUserModel");
-const port = process.env.PORT || 3000; // Use the provided PORT or default to 3000
+const port = process.env.PORT || 3000;
 const mongoose = require("mongoose");
 require("dotenv").config();
 const session = require("express-session")
