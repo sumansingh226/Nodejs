@@ -21,7 +21,6 @@ exports.postLogOut = (req, res, next) => {
     req.session.destroy((err) => {
         if (err) {
             console.error("Error destroying session:", err);
-            return next(err); // Forward the error to the error-handling middleware
         }
         res.redirect("/");
     });
