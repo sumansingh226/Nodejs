@@ -10,7 +10,7 @@ exports.getSignUp = (req, res, next) => {
 
 }
 exports.postSignUp = (req, res, next) => {
-
+    const { email, password, confirmPassword } = req.body;
 
 }
 
