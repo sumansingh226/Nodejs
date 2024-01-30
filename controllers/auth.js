@@ -1,4 +1,5 @@
-const monggoseUserModel = require("../models/monggoseUserModel");
+const { updateSearchIndex } = require("../models/monggoseUserModel");
+const User = require("../models/monggoseUserModel");
 
 exports.getSignUp = (req, res, next) => {
     res.render("auth/signup", {
@@ -11,6 +12,11 @@ exports.getSignUp = (req, res, next) => {
 }
 exports.postSignUp = (req, res, next) => {
     const { email, password, confirmPassword } = req.body;
+    User.findOne({ email: email }).then((userDoc) => {
+        if (userDoc) {
+            res.redirect("/")
+        }
+    })
 
 }
 
