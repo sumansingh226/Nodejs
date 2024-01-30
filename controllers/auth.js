@@ -25,7 +25,7 @@ exports.postSignUp = (req, res, next) => {
         return user.save();
     }).then(result => {
         console.log(result);
-        return res.redirect("/")
+        return res.redirect("/login")
     }).catch(err => {
         console.log(err);
     })
