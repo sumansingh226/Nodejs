@@ -1,4 +1,36 @@
-const monggoseUserModel = require("../models/monggoseUserModel");
+const { updateSearchIndex } = require("../models/monggoseUserModel");
+const User = require("../models/monggoseUserModel");
+
+exports.getSignUp = (req, res, next) => {
+    res.render("auth/signup", {
+        path: "/signup",
+        pageTitle: "SignUp",
+        isAuthenticated: req.IsLoggedIn,
+
+    })
+
+}
+exports.postSignUp = (req, res, next) => {
+    const { name, email, password, confirmPassword } = req.body;
+    User.findOne({ email: email }).then(userDoc => {
+        if (userDoc) {
+            return res.redirect("/signup")
+        }
+        const user = new User({
+            name: name,
+            email: email,
+            password: password,
+            cart: { items: [] }
+        })
+        return user.save();
+    }).then(result => {
+        console.log(result);
+        return res.redirect("/login")
+    }).catch(err => {
+        console.log(err);
+    })
+
+}
 
 exports.getLogin = (req, res, next) => {
     res.render("auth/login", {

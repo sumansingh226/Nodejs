@@ -56,19 +56,6 @@ const connectToMongoDB = async () => {
             useUnifiedTopology: true,
         });
         console.log("Connected to MongoDB");
-        const user = await User.findById("65b2d761f9c61f421b37f9de");
-        if (!user) {
-            const newUser = new User({
-                name: "Suman Singh",
-                email: "suman1112@gmail.com",
-                cart: {
-                    items: [],
-                },
-            });
-
-            await newUser.save();
-            console.log("User added");
-        }
     } catch (error) {
         console.error("Error connecting to MongoDB:", error);
     }
