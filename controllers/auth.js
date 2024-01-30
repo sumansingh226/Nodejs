@@ -11,12 +11,13 @@ exports.getSignUp = (req, res, next) => {
 
 }
 exports.postSignUp = (req, res, next) => {
-    const { email, password, confirmPassword } = req.body;
+    const { name, email, password, confirmPassword } = req.body;
     User.findOne({ email: email }).then(userDoc => {
         if (userDoc) {
             return res.redirect("/signup")
         }
         const user = new User({
+            name: name,
             email: email,
             password: password,
             cart: { items: [] }
