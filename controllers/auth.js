@@ -50,7 +50,8 @@ exports.postLogin = (req, res, next) => {
                 return res.redirect("/login");
             }
 
-            bcrypt.compare(password, user.password)
+            bcrypt
+                .compare(password, user.password)
                 .then((doMatch) => {
                     if (doMatch) {
                         res.setHeader("Set-Cookie", "loggedIn=true; Max-Age=10; HttpOnly");
@@ -61,12 +62,12 @@ exports.postLogin = (req, res, next) => {
                         return res.redirect("/login");
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                     return res.redirect("/login");
                 });
         })
-        .catch(err => {
+        .catch((err) => {
             console.log(err);
             return res.redirect("/login");
         });
