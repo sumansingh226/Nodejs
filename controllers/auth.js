@@ -42,34 +42,29 @@ exports.getLogin = (req, res, next) => {
     });
 };
 
-exports.postLogin = (req, res, next) => {
-    const { email, password } = req.body;
-    User.findOne({ email: email })
-        .then((user) => {
-            if (!user) {
-                return res.redirect("/login");
-            }
-            bcrypt
-                .compare(password, user.password)
-                .then((doMatch) => {
-                    if (doMatch) {
-                        res.setHeader("Set-Cookie", "loggedIn=true; Max-Age=10; HttpOnly");
-                        req.session.isLoggedIn = true;
-                        req.session.user = user;
-                        return res.redirect("/");
-                    } else {
-                        return res.redirect("/login");
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                    return res.redirect("/login");
-                });
-        })
-        .catch((err) => {
-            console.log(err);
+exports.postLogin = async (req, res, next) => {
+    try {
+        const { email, password } = req.body;
+        const user = await User.findOne({ email: email });
+
+        if (!user) {
             return res.redirect("/login");
-        });
+        }
+
+        const doMatch = await bcrypt.compare(password, user.password);
+
+        if (doMatch) {
+            res.setHeader("Set-Cookie", "loggedIn=true; Max-Age=10; HttpOnly");
+            req.session.isLoggedIn = true;
+            req.session.user = user;
+            return res.redirect("/");
+        } else {
+            return res.redirect("/login");
+        }
+    } catch (err) {
+        console.error(err);
+        return res.redirect("/login");
+    }
 };
 
 exports.postLogOut = (req, res, next) => {
