@@ -9,31 +9,33 @@ exports.getSignUp = (req, res, next) => {
     });
 };
 
-exports.postSignUp = (req, res, next) => {
-    const { name, email, password, confirmPassword } = req.body;
-    User.findOne({ email: email })
-        .then((userDoc) => {
-            if (userDoc) {
-                return res.redirect("/signup");
-            }
-            bcrypt.hash(password, 12).then((hashPassword) => {
-                const user = new User({
-                    name: name,
-                    email: email,
-                    password: hashPassword,
-                    cart: { items: [] },
-                });
-                return user.save();
-            });
-        })
-        .then((result) => {
-            console.log(result);
-            return res.redirect("/login");
-        })
-        .catch((err) => {
-            console.log(err);
+exports.postSignUp = async (req, res, next) => {
+    try {
+        const { name, email, password, confirmPassword } = req.body;
+        const userDoc = await User.findOne({ email: email });
+
+        if (userDoc) {
+            return res.redirect("/signup");
+        }
+
+        const hashPassword = await bcrypt.hash(password, 12);
+
+        const user = new User({
+            name: name,
+            email: email,
+            password: hashPassword,
+            cart: { items: [] },
         });
+
+        const result = await user.save();
+        console.log(result);
+        return res.redirect("/login");
+    } catch (err) {
+        console.error(err);
+        return res.redirect("/signup");
+    }
 };
+
 
 exports.getLogin = (req, res, next) => {
     res.render("auth/login", {
