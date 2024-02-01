@@ -43,6 +43,7 @@ exports.getLogin = (req, res, next) => {
 };
 
 exports.postLogin = (req, res, next) => {
+    const { email, password } = req.body;
     res.setHeader("Set-Cookie", "loggedIn=true; Max-Age=10; HttpOnly");
     monggoseUserModel.findById("65b2d761f9c61f421b37f9de").then((user) => {
         req.session.isLoggedIn = true;
