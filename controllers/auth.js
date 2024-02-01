@@ -13,20 +13,16 @@ exports.postSignUp = async (req, res, next) => {
     try {
         const { name, email, password, confirmPassword } = req.body;
         const userDoc = await User.findOne({ email: email });
-
         if (userDoc) {
             return res.redirect("/signup");
         }
-
         const hashPassword = await bcrypt.hash(password, 12);
-
         const user = new User({
             name: name,
             email: email,
             password: hashPassword,
             cart: { items: [] },
         });
-
         const result = await user.save();
         console.log(result);
         return res.redirect("/login");
