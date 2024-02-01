@@ -44,21 +44,32 @@ exports.getLogin = (req, res, next) => {
 
 exports.postLogin = (req, res, next) => {
     const { email, password } = req.body;
-    User.findOne({ email: email }).then((user) => {
-        if (!user) {
-            res.redirect("/login");
-        }
-        bcrypt.compare(password, user.password).then((doMatch) => {
-            res.setHeader("Set-Cookie", "loggedIn=true; Max-Age=10; HttpOnly");
-            monggoseUserModel.findById("65b2d761f9c61f421b37f9de").then((user) => {
-                req.session.isLoggedIn = true;
-                req.session.user = user;
-                res.redirect("/");
-            });
+    User.findOne({ email: email })
+        .then((user) => {
+            if (!user) {
+                return res.redirect("/login");
+            }
+
+            bcrypt.compare(password, user.password)
+                .then((doMatch) => {
+                    if (doMatch) {
+                        res.setHeader("Set-Cookie", "loggedIn=true; Max-Age=10; HttpOnly");
+                        req.session.isLoggedIn = true;
+                        req.session.user = user;
+                        return res.redirect("/");
+                    } else {
+                        return res.redirect("/login");
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                    return res.redirect("/login");
+                });
+        })
+        .catch(err => {
+            console.log(err);
+            return res.redirect("/login");
         });
-    }).catch(err => {
-        console.log(err);
-    });
 };
 
 exports.postLogOut = (req, res, next) => {
