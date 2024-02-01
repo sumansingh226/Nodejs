@@ -44,16 +44,20 @@ exports.getLogin = (req, res, next) => {
 
 exports.postLogin = (req, res, next) => {
     const { email, password } = req.body;
-    User.findOne({ email: email }).then(user => {
+    User.findOne({ email: email }).then((user) => {
         if (!user) {
             res.redirect("/login");
         }
-    })
-    res.setHeader("Set-Cookie", "loggedIn=true; Max-Age=10; HttpOnly");
-    monggoseUserModel.findById("65b2d761f9c61f421b37f9de").then((user) => {
-        req.session.isLoggedIn = true;
-        req.session.user = user;
-        res.redirect("/");
+        bcrypt.compare(password, user.password).then((doMatch) => {
+            res.setHeader("Set-Cookie", "loggedIn=true; Max-Age=10; HttpOnly");
+            monggoseUserModel.findById("65b2d761f9c61f421b37f9de").then((user) => {
+                req.session.isLoggedIn = true;
+                req.session.user = user;
+                res.redirect("/");
+            });
+        });
+    }).catch(err => {
+        console.log(err);
     });
 };
 
