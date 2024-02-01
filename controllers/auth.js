@@ -16,6 +16,7 @@ exports.postSignUp = (req, res, next) => {
         if (userDoc) {
             return res.redirect("/signup")
         }
+        bcrypt.hash(password, 12);
         const user = new User({
             name: name,
             email: email,
