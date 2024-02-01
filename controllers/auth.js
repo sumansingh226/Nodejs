@@ -1,5 +1,5 @@
-const { updateSearchIndex } = require("../models/monggoseUserModel");
 const User = require("../models/monggoseUserModel");
+const bcrypt = require("bcryptjs");
 
 exports.getSignUp = (req, res, next) => {
     res.render("auth/signup", {
