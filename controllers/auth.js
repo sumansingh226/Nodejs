@@ -8,6 +8,7 @@ exports.getSignUp = (req, res, next) => {
         isAuthenticated: req.IsLoggedIn,
     });
 };
+
 exports.postSignUp = (req, res, next) => {
     const { name, email, password, confirmPassword } = req.body;
     User.findOne({ email: email })
@@ -46,13 +47,10 @@ exports.postLogin = async (req, res, next) => {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email: email });
-
         if (!user) {
             return res.redirect("/login");
         }
-
         const doMatch = await bcrypt.compare(password, user.password);
-
         if (doMatch) {
             res.setHeader("Set-Cookie", "loggedIn=true; Max-Age=10; HttpOnly");
             req.session.isLoggedIn = true;
