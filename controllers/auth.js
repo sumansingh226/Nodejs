@@ -50,7 +50,7 @@ exports.postLogin = async (req, res, next) => {
         }
         const doMatch = await bcrypt.compare(password, user.password);
         if (doMatch) {
-            res.setHeader("Set-Cookie", "loggedIn=true; Max-Age=10; HttpOnly");
+            // res.setHeader("Set-Cookie", "loggedIn=true; Max-Age=10; HttpOnly");
             req.session.isLoggedIn = true;
             req.session.user = user;
             return res.redirect("/");
