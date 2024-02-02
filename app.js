@@ -11,6 +11,7 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
+const csrf = require("csurf")
 
 const app = express();
 const store = new MongoDBStore({
