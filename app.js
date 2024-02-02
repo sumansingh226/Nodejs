@@ -18,6 +18,7 @@ const store = new MongoDBStore({
     uri: process.env.SESSION_CONNECTION_URL,
     collection: "session",
 });
+const csrfProtection = csrf()
 
 app.set("view engine", "ejs");
 app.set("views", "views");
