@@ -33,6 +33,7 @@ app.use(
         store: store,
     })
 );
+app.use(csrfProtection);
 app.use((req, res, next) => {
     if (!req.session.user) {
         return next();
