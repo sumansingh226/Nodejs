@@ -5,7 +5,7 @@ exports.getSignUp = (req, res, next) => {
     res.render("auth/signup", {
         path: "/signup",
         pageTitle: "SignUp",
-        isAuthenticated: req.IsLoggedIn,
+        isAuthenticated: req.session.isLoggedIn,
     });
 };
 
@@ -37,7 +37,7 @@ exports.getLogin = (req, res, next) => {
     res.render("auth/login", {
         path: "/login",
         pageTitle: "Login",
-        isAuthenticated: req.IsLoggedIn,
+        isAuthenticated: req.session.isLoggedIn,
     });
 };
 
@@ -50,7 +50,7 @@ exports.postLogin = async (req, res, next) => {
         }
         const doMatch = await bcrypt.compare(password, user.password);
         if (doMatch) {
-            res.setHeader("Set-Cookie", "loggedIn=true; Max-Age=10; HttpOnly");
+            // res.setHeader("Set-Cookie", "loggedIn=true; Max-Age=10; HttpOnly");
             req.session.isLoggedIn = true;
             req.session.user = user;
             return res.redirect("/");

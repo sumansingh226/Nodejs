@@ -11,12 +11,14 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
+const csrf = require("csurf");
 
 const app = express();
 const store = new MongoDBStore({
     uri: process.env.SESSION_CONNECTION_URL,
     collection: "session",
 });
+const csrfProtection = csrf();
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -31,17 +33,18 @@ app.use(
         store: store,
     })
 );
+app.use(csrfProtection);
 app.use((req, res, next) => {
-    User.findById("65b2d761f9c61f421b37f9de")
+    if (!req.session.user) {
+        return next();
+    }
+    User.findById(req.session.user._id)
         .then((user) => {
             req.user = user;
             next();
         })
-        .catch((err) => {
-            console.log(err);
-        });
+        .catch((err) => console.log(err));
 });
-
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
