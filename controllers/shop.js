@@ -36,6 +36,7 @@ exports.getIndex = (req, res, next) => {
         activeShop: true,
         productCSS: true,
         isAuthenticated: req.session.isLoggedIn,
+        csrfToken: req.csrfToken(),
       });
     })
     .catch((err) => {
