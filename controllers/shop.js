@@ -64,6 +64,7 @@ exports.getProductById = (req, res, next) => {
         pageTitle: title,
         product: product,
         isAuthenticated: req.session.isLoggedIn,
+        csrfToken: req.csrfToken(),
       });
     })
     .catch((err) => {
@@ -134,6 +135,7 @@ exports.getOrders = async (req, res, next) => {
       pageTitle: "My  Orders",
       orders: products,
       isAuthenticated: req.session.isLoggedIn,
+      csrfToken: req.csrfToken(),
     });
   } catch (error) {
     console.error("Error in getOrders:", error);
