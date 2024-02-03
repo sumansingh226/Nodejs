@@ -86,8 +86,7 @@ exports.getCart = async (req, res, next) => {
       pageTitle: "Cart Items",
       prods: user.cart.items,
       cart: user.cart,
-      isAuthenticated: true,
-      csrfToken: req.csrfToken(),
+      isAuthenticated: req.session.isLoggedIn,
     });
   } catch (err) {
     console.error("err", err);
