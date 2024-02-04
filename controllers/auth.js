@@ -2,10 +2,15 @@ const User = require("../models/monggoseUserModel");
 const bcrypt = require("bcryptjs");
 
 exports.getSignUp = (req, res, next) => {
+    let message = req.flash('error')
+    if (message.length > 0) {
+        message = message[0]
+    }
     res.render("auth/signup", {
         path: "/signup",
         pageTitle: "SignUp",
         isAuthenticated: req.session.isLoggedIn,
+        errorMessage: message
     });
 };
 
@@ -14,6 +19,7 @@ exports.postSignUp = async (req, res, next) => {
         const { name, email, password, confirmPassword } = req.body;
         const userDoc = await User.findOne({ email: email });
         if (userDoc) {
+            req.flash('error', 'Email already exist.Please pick a diffrent email')
             return res.redirect("/signup");
         }
         const hashPassword = await bcrypt.hash(password, 12);
@@ -34,10 +40,16 @@ exports.postSignUp = async (req, res, next) => {
 
 
 exports.getLogin = (req, res, next) => {
+    let message = req.flash('error')
+    if (message.length > 0) {
+        message = message[0]
+    }
+    else message = null;
     res.render("auth/login", {
         path: "/login",
         pageTitle: "Login",
         isAuthenticated: req.session.isLoggedIn,
+        errorMessage: message
     });
 };
 
@@ -55,6 +67,7 @@ exports.postLogin = async (req, res, next) => {
             req.session.user = user;
             return res.redirect("/");
         } else {
+            req.flash('error', 'invalid user name  or password!')
             return res.redirect("/login");
         }
     } catch (err) {
