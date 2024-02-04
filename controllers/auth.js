@@ -34,12 +34,16 @@ exports.postSignUp = async (req, res, next) => {
 
 
 exports.getLogin = (req, res, next) => {
-    console.log("req.flash", req.flash);
+    let message = req.flash('error')
+    if (message.length > 0) {
+        message = message[0]
+    }
+    else message = null;
     res.render("auth/login", {
         path: "/login",
         pageTitle: "Login",
         isAuthenticated: req.session.isLoggedIn,
-        errorMessage: req.flash('error')
+        errorMessage: message
     });
 };
 
