@@ -148,5 +148,6 @@ exports.postResetPassword = (req, res, next) => {
             res.redirect("/reset-password");
         }
         const token = buffer.toString('hex');
+        User.findOne({ email: req.body.email })
     })
 }
