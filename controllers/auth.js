@@ -38,12 +38,11 @@ exports.postSignUp = async (req, res, next) => {
             cart: { items: [] },
         });
 
-        const result = await user.save();
+        await user.save();
 
         // Send a welcome email to the user
         await sendWelcomeEmail(email, name);
 
-        console.log(result);
         req.flash("success", "You have successfully signed up!");
         return res.redirect("/login");
     } catch (err) {
@@ -143,7 +142,7 @@ const sendPasswordResetEmail = async (toEmail, resetToken) => {
         },
     });
 
-    const resetLink = `http://localhost:3000/reset-password=${resetToken}`;
+    const resetLink = `http://localhost:3000/update-password=${resetToken}`;
 
     const mailOptions = {
         from: process.env.EMAIL_ID,
@@ -206,34 +205,56 @@ const sendPasswordResetEmail = async (toEmail, resetToken) => {
 exports.postResetPassword = (req, res, next) => {
     crypto.randomBytes(32, (err, buffer) => {
         if (err) {
-            req.flash('error', 'Error occurred');
-            return res.redirect('/reset-password');
+            req.flash("error", "Error occurred");
+            return res.redirect("/reset-password");
         }
-        const token = buffer.toString('hex');
+        const token = buffer.toString("hex");
         User.findOne({ email: req.body.email })
-            .then(user => {
+            .then((user) => {
                 if (!user) {
-                    req.flash('error', 'User does not exist with the given email.');
-                    return res.redirect('/reset-password');
+                    req.flash("error", "User does not exist with the given email.");
+                    return res.redirect("/reset-password");
+                } else {
+                    // Set the resetToken and resetTokenExpiration correctly
+                    user.resetToken = token;
+                    user.resetTokenExpiration = Date.now() + 3600000; // 1 hour
+
+                    return user.save();
                 }
-
-                // Set the resetToken and resetTokenExpiration correctly
-                user.resetToken = token;
-                user.resetTokenExpiration = Date.now() + 3600000; // 1 hour
-
-                return user.save();
             })
-            .then(user => {
+            .then((user) => {
                 // After saving the user, send the password reset email
                 sendPasswordResetEmail(req.body.email, token);
-                req.flash('success', 'Password reset email sent successfully.');
-                res.redirect('/');
+                req.flash("success", "Password reset email sent successfully.");
+                res.redirect("/");
             })
-            .catch(err => {
+            .catch((err) => {
                 console.error(err);
-                req.flash('error', 'An error occurred.');
-                res.redirect('/reset-password');
+                req.flash("error", "An error occurred.");
+                res.redirect("/reset-password");
             });
     });
 };
 
+exports.getUpdatePassword = (req, res, next) => {
+    const token = req.params.token;
+    User.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } })
+        .then((user) => {
+            console.log("user", user);
+            let message = req.flash("error");
+            if (message.length > 0) {
+                message = message[0];
+            } else message = null;
+            res.render("auth/update-password", {
+                path: `/update-password=${token}`,
+                pageTitle: "Update Password",
+                isAuthenticated: req.session.isLoggedIn,
+                errorMessage: message,
+            });
+        })
+        .catch((err) => {
+            console.log("err", err);
+        });
+};
+
+exports.postUpdatePassword = (req, res, next) => { };
