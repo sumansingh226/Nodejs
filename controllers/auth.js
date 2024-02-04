@@ -43,7 +43,6 @@ exports.postSignUp = async (req, res, next) => {
         // Send a welcome email to the user
         await sendWelcomeEmail(email, name);
 
-        console.log(result);
         req.flash("success", "You have successfully signed up!");
         return res.redirect("/login");
     } catch (err) {
