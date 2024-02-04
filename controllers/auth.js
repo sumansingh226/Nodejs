@@ -1,5 +1,7 @@
 const User = require("../models/monggoseUserModel");
 const bcrypt = require("bcryptjs");
+const nodemailer = require("nodemailer");
+const sendgridTransport = require("nodemailer-sendgrid-transport")
 
 exports.getSignUp = (req, res, next) => {
     let message = req.flash('error')
