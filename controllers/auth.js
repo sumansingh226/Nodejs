@@ -123,3 +123,13 @@ exports.postLogOut = (req, res, next) => {
         res.redirect("/");
     });
 };
+
+
+exports.getResetPassword = (req, res, next) => {
+    res.render("auth/reset", {
+        path: "/reset-password",
+        pageTitle: "Reset Password",
+        isAuthenticated: req.session.isLoggedIn,
+        errorMessage: message
+    });
+}
