@@ -24,11 +24,11 @@
                 <label for="confirmPassword">Confirm Password</label>
                 <input type="password" name="confirmPassword" id="confirmPassword">
             </div>
-            <div class="form-control"> <% if (errorMessage) { %>
-                <p class="error-message"><%= errorMessage %></p>
-            <% } %></div>
             <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
             <button class="btn" type="submit">SignUp</button>
         </form>
+        <div class="form-control"> <% if (errorMessage) { %>
+            <p class="error-message"><%= errorMessage %></p>
+        <% } %></div>
     </main>
 <%- include('../includes/end.ejs') %>
