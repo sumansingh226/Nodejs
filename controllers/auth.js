@@ -1,6 +1,7 @@
 const User = require("../models/monggoseUserModel");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
+const crypto = require("crypto");
 require("dotenv").config();
 
 
@@ -137,4 +138,8 @@ exports.getResetPassword = (req, res, next) => {
         isAuthenticated: req.session.isLoggedIn,
         errorMessage: message
     });
+}
+
+exports.postResetPassword = (req, res, next) => {
+
 }
