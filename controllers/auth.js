@@ -38,7 +38,7 @@ exports.postSignUp = async (req, res, next) => {
             cart: { items: [] },
         });
 
-        const result = await user.save();
+        await user.save();
 
         // Send a welcome email to the user
         await sendWelcomeEmail(email, name);
@@ -257,7 +257,4 @@ exports.getUpdatePassword = (req, res, next) => {
         });
 };
 
-
-exports.postUpdatePassword = (req, res, next) => {
-
-}
+exports.postUpdatePassword = (req, res, next) => { };
