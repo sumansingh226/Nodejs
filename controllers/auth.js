@@ -148,6 +148,12 @@ exports.postResetPassword = (req, res, next) => {
             res.redirect("/reset-password");
         }
         const token = buffer.toString('hex');
-        User.findOne({ email: req.body.email })
+        User.findOne({ email: req.body.email }).then(user => {
+
+            if (!user) {
+                req.flash('error', "User dose not exist with given email .")
+                res.redirect("/reset-password");
+            }
+        })
     })
 }
