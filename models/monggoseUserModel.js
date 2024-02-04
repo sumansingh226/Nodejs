@@ -33,6 +33,12 @@ const UserSchema = new Schema({
             default: 0,
         },
     },
+    resetToken: {
+        type: String
+    },
+    resetTokenExpiration: {
+        type: Date
+    }
 });
 
 UserSchema.methods.addToCart = function (product) {
