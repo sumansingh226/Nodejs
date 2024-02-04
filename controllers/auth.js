@@ -154,6 +154,8 @@ exports.postResetPassword = (req, res, next) => {
                 req.flash('error', "User dose not exist with given email .")
                 res.redirect("/reset-password");
             }
+            user.resetToken = token;
+            user.resetTokenExpiration = Date.now() * 3600000;
         })
     })
 }
