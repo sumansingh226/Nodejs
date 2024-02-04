@@ -34,10 +34,12 @@ exports.postSignUp = async (req, res, next) => {
 
 
 exports.getLogin = (req, res, next) => {
+    console.log("req.flash", req.flash);
     res.render("auth/login", {
         path: "/login",
         pageTitle: "Login",
         isAuthenticated: req.session.isLoggedIn,
+        errorMessage: req.flash('error')
     });
 };
 
@@ -55,6 +57,7 @@ exports.postLogin = async (req, res, next) => {
             req.session.user = user;
             return res.redirect("/");
         } else {
+            req.flash('error', 'invalid user name  or password!')
             return res.redirect("/login");
         }
     } catch (err) {
