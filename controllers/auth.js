@@ -143,7 +143,7 @@ const sendPasswordResetEmail = async (toEmail, resetToken) => {
         },
     });
 
-    const resetLink = `http://localhost:3000/reset-password=${resetToken}`;
+    const resetLink = `http://localhost:3000/update-password=${resetToken}`;
 
     const mailOptions = {
         from: process.env.EMAIL_ID,
@@ -216,12 +216,14 @@ exports.postResetPassword = (req, res, next) => {
                     req.flash('error', 'User does not exist with the given email.');
                     return res.redirect('/reset-password');
                 }
+                else {
+                    // Set the resetToken and resetTokenExpiration correctly
+                    user.resetToken = token;
+                    user.resetTokenExpiration = Date.now() + 3600000; // 1 hour
 
-                // Set the resetToken and resetTokenExpiration correctly
-                user.resetToken = token;
-                user.resetTokenExpiration = Date.now() + 3600000; // 1 hour
+                    return user.save();
+                }
 
-                return user.save();
             })
             .then(user => {
                 // After saving the user, send the password reset email
@@ -237,3 +239,26 @@ exports.postResetPassword = (req, res, next) => {
     });
 };
 
+
+
+exports.getUpdatePassword = (req, res, next) => {
+    const token = req.params.token;
+    console.log("token", token);
+    User.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } }).then((user) => {
+        console.log("user", user);
+        let message = req.flash("error");
+        if (message.length > 0) {
+            message = message[0];
+        } else message = null;
+        res.render("auth/update-password", {
+            path: `/update-password=${token}`,
+            pageTitle: "Update Password",
+            isAuthenticated: req.session.isLoggedIn,
+            errorMessage: message,
+            // userId: user._id.toString()
+        });
+    }).catch(err => {
+        console.log("err", err);
+    })
+
+};
