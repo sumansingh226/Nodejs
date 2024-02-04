@@ -2,10 +2,15 @@ const User = require("../models/monggoseUserModel");
 const bcrypt = require("bcryptjs");
 
 exports.getSignUp = (req, res, next) => {
+    let message = req.flash('error')
+    if (message.length > 0) {
+        message = message[0]
+    }
     res.render("auth/signup", {
         path: "/signup",
         pageTitle: "SignUp",
         isAuthenticated: req.session.isLoggedIn,
+        errorMessage: message
     });
 };
 
