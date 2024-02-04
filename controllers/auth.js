@@ -257,3 +257,8 @@ exports.getUpdatePassword = (req, res, next) => {
             console.log("err", err);
         });
 };
+
+
+exports.postUpdatePassword = (req, res, next) => {
+
+}
