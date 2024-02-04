@@ -147,5 +147,6 @@ exports.postResetPassword = (req, res, next) => {
             req.flash('error', "Error occured")
             res.redirect("/reset-password");
         }
+        const token = buffer.toString('hex');
     })
 }
