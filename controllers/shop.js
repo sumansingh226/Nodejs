@@ -170,16 +170,6 @@ exports.postCheckout = async (req, res, next) => {
       req.user.clearCartOnOrder(),
     ]);
 
-    if (orderSaveResult.status === "fulfilled") {
-      console.log("Order saved successfully");
-    } else {
-      console.error("Error saving order:", orderSaveResult.reason);
-    }
-    if (clearCartResult.status === "fulfilled") {
-      console.log("Cart cleared successfully");
-    } else {
-      console.error("Error clearing cart:", clearCartResult.reason);
-    }
     const productsOrders = await Order.find({ "user.userId": req.user._id });
     res.render("shop/orders", {
       path: "/orders",
