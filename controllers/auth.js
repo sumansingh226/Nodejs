@@ -235,8 +235,7 @@ exports.postResetPassword = (req, res, next) => {
 };
 
 exports.getUpdatePassword = (req, res, next) => {
-    const token = req.query.token;  // Retrieve the token from query parameters
-    console.log("kjkj");
+    const token = req.query.token;
     User.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } })
         .then((user) => {
             let message = req.flash("error");
@@ -244,7 +243,7 @@ exports.getUpdatePassword = (req, res, next) => {
                 message = message[0];
             } else message = null;
             res.render("auth/update-password", {
-                path: `/update-password?token=${token}`,  // Update the path
+                path: `/update-password?token=${token}`,
                 pageTitle: "Update Password",
                 isAuthenticated: req.session.isLoggedIn,
                 errorMessage: message,
