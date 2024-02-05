@@ -140,7 +140,7 @@ const sendPasswordResetEmail = async (toEmail, resetToken) => {
         },
     });
 
-    const resetLink = `http://localhost:3000/update-password=${resetToken}`;
+    const resetLink = `http://localhost:3000/update-password?token=${resetToken}`;
 
     const mailOptions = {
         from: process.env.EMAIL_ID,
@@ -235,16 +235,16 @@ exports.postResetPassword = (req, res, next) => {
 };
 
 exports.getUpdatePassword = (req, res, next) => {
-    const token = req.params.token;
+    const token = req.query.token;  // Retrieve the token from query parameters
+    console.log("kjkj");
     User.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } })
         .then((user) => {
-            console.log("user", user);
             let message = req.flash("error");
             if (message.length > 0) {
                 message = message[0];
             } else message = null;
             res.render("auth/update-password", {
-                path: `/update-password=${token}`,
+                path: `/update-password?token=${token}`,  // Update the path
                 pageTitle: "Update Password",
                 isAuthenticated: req.session.isLoggedIn,
                 errorMessage: message,
@@ -254,5 +254,6 @@ exports.getUpdatePassword = (req, res, next) => {
             console.log("err", err);
         });
 };
+
 
 exports.postUpdatePassword = (req, res, next) => { };

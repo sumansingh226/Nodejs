@@ -18,7 +18,7 @@ router.get('/reset-password', authController.getResetPassword);
 router.post('/reset-password', authController.postResetPassword);
 
 // Update Password Routes
-router.get('/update-password/:token', authController.getUpdatePassword);
-router.post('/update-password/:token', authController.postUpdatePassword);
+router.get('/update-password', authController.getUpdatePassword);
+router.post('/update-password/', authController.postUpdatePassword);
 
 module.exports = router;
