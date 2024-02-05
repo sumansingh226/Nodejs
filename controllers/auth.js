@@ -60,14 +60,12 @@ const sendWelcomeEmail = async (toEmail, userName) => {
             pass: process.env.Pass,
         },
     });
-
     const mailOptions = {
         from: process.env.EMAIL_ID,
         to: toEmail,
         subject: "Welcome to E-shop",
         text: `Hello ${userName},\n\nWelcome to E-shop! Thank you for signing up.\n\nBest regards,\nThe Your App Team`,
     };
-
     try {
         await transporter.sendMail(mailOptions);
         console.log("Welcome email sent successfully.");
