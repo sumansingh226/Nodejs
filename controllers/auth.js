@@ -284,8 +284,9 @@ exports.postUpdatePassword = async (req, res, next) => {
 
         res.redirect("/login");
     } catch (err) {
-        console.error("Error:", err);
         req.flash("error", "An error occurred.");
         res.redirect("/update-password");
+        console.error("Error:", err);
+
     }
 };
