@@ -238,6 +238,8 @@ exports.getUpdatePassword = (req, res, next) => {
     const token = req.query.token;
     User.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } })
         .then((user) => {
+            console.log('Found user:', user); // Add this line for debugging
+
             let message = req.flash("error");
             if (message.length > 0) {
                 message = message[0];
@@ -247,6 +249,7 @@ exports.getUpdatePassword = (req, res, next) => {
                 pageTitle: "Update Password",
                 isAuthenticated: req.session.isLoggedIn,
                 errorMessage: message,
+                userId: user._id.toString()
             });
         })
         .catch((err) => {
