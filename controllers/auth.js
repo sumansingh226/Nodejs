@@ -258,4 +258,6 @@ exports.getUpdatePassword = (req, res, next) => {
 };
 
 
-exports.postUpdatePassword = (req, res, next) => { };
+exports.postUpdatePassword = (req, res, next) => {
+    const { password, userId, passwordToken } = req.body;
+};
