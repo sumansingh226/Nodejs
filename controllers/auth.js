@@ -60,14 +60,12 @@ const sendWelcomeEmail = async (toEmail, userName) => {
             pass: process.env.Pass,
         },
     });
-
     const mailOptions = {
         from: process.env.EMAIL_ID,
         to: toEmail,
         subject: "Welcome to E-shop",
         text: `Hello ${userName},\n\nWelcome to E-shop! Thank you for signing up.\n\nBest regards,\nThe Your App Team`,
     };
-
     try {
         await transporter.sendMail(mailOptions);
         console.log("Welcome email sent successfully.");
@@ -142,8 +140,7 @@ const sendPasswordResetEmail = async (toEmail, resetToken) => {
         },
     });
 
-    const resetLink = `http://localhost:3000/update-password=${resetToken}`;
-
+    const resetLink = `http://localhost:3000/update-password?token=${resetToken}`;
     const mailOptions = {
         from: process.env.EMAIL_ID,
         to: toEmail,
@@ -237,19 +234,20 @@ exports.postResetPassword = (req, res, next) => {
 };
 
 exports.getUpdatePassword = (req, res, next) => {
-    const token = req.params.token;
+    const token = req.query.token;
     User.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } })
         .then((user) => {
-            console.log("user", user);
             let message = req.flash("error");
             if (message.length > 0) {
                 message = message[0];
             } else message = null;
             res.render("auth/update-password", {
-                path: `/update-password=${token}`,
+                path: `/update-password?token=${token}`,
                 pageTitle: "Update Password",
                 isAuthenticated: req.session.isLoggedIn,
                 errorMessage: message,
+                userId: user._id.toString(),
+                passwordToken: token,
             });
         })
         .catch((err) => {
@@ -257,4 +255,37 @@ exports.getUpdatePassword = (req, res, next) => {
         });
 };
 
-exports.postUpdatePassword = (req, res, next) => { };
+
+exports.postUpdatePassword = async (req, res, next) => {
+    try {
+        const { password, userId, passwordToken } = req.body;
+
+        const resetUser = await User.findOne({
+            _id: userId,
+            resetToken: passwordToken,
+            resetTokenExpiration: { $gt: Date.now() },
+        });
+
+        if (!resetUser) {
+            // If no user is found with the given criteria
+            req.flash("error", "Invalid reset token or expired link.");
+            return res.redirect("/update-password"); // Redirect to the update password page with an error message
+        }
+
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(password, 12);
+
+        // Update user's password and reset token fields
+        resetUser.password = hashedPassword;
+        resetUser.resetToken = undefined;
+        resetUser.resetTokenExpiration = undefined;
+
+        await resetUser.save(); // Save the updated user details
+
+        res.redirect("/login");
+    } catch (err) {
+        console.error("Error:", err);
+        req.flash("error", "An error occurred.");
+        res.redirect("/update-password");
+    }
+};
