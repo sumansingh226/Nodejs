@@ -249,7 +249,8 @@ exports.getUpdatePassword = (req, res, next) => {
                 pageTitle: "Update Password",
                 isAuthenticated: req.session.isLoggedIn,
                 errorMessage: message,
-                userId: user._id.toString()
+                userId: user._id.toString(),
+                passwordToken: token
             });
         })
         .catch((err) => {
