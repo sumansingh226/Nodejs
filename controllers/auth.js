@@ -141,7 +141,6 @@ const sendPasswordResetEmail = async (toEmail, resetToken) => {
     });
 
     const resetLink = `http://localhost:3000/update-password?token=${resetToken}`;
-
     const mailOptions = {
         from: process.env.EMAIL_ID,
         to: toEmail,
