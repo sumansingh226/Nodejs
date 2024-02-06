@@ -21,7 +21,6 @@ exports.postSignUp = async (req, res, next) => {
     try {
         const { name, email, password, confirmPassword } = req.body;
         const userDoc = await User.findOne({ email: email });
-
         if (userDoc) {
             req.flash(
                 "error",
@@ -96,7 +95,7 @@ exports.postLogin = async (req, res, next) => {
         }
         const doMatch = await bcrypt.compare(password, user.password);
         if (doMatch) {
-            // res.setHeader("Set-Cookie", "loggedIn=true; Max-Age=10; HttpOnly");
+            res.setHeader("Set-Cookie", "loggedInCookie=true; Max-Age=10; HttpOnly");
             req.session.isLoggedIn = true;
             req.session.user = user;
             return res.redirect("/");
@@ -119,6 +118,7 @@ exports.postLogOut = (req, res, next) => {
     });
 };
 
+
 exports.getResetPassword = (req, res, next) => {
     let message = req.flash("error");
     if (message.length > 0) {
@@ -131,6 +131,8 @@ exports.getResetPassword = (req, res, next) => {
         errorMessage: message,
     });
 };
+
+
 const sendPasswordResetEmail = async (toEmail, resetToken) => {
     const transporter = nodemailer.createTransport({
         service: "gmail",
@@ -284,8 +286,9 @@ exports.postUpdatePassword = async (req, res, next) => {
 
         res.redirect("/login");
     } catch (err) {
-        console.error("Error:", err);
         req.flash("error", "An error occurred.");
         res.redirect("/update-password");
+        console.error("Error:", err);
+
     }
 };
