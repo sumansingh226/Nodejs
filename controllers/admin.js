@@ -27,7 +27,6 @@ exports.getAllProducts = (req, res, next) => {
 };
 
 exports.getAddProduct = (req, res, next) => {
-    console.log("req.session", req.session);
     if (req.session.isLoggedIn !== true) {
         return res.redirect("/login")
     }
