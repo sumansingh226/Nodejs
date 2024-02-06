@@ -11,7 +11,8 @@ exports.getAllProducts = (req, res, next) => {
                 hasProducts: products.length > 0,
                 activeShop: true,
                 productCSS: true,
-                isAuthenticated: req.IsLoggedIn
+                isAuthenticated: req.session.isLoggedIn,
+                csrfToken: req.csrfToken(),
             });
         })
         .catch((err) => {
@@ -35,6 +36,8 @@ exports.getAddProduct = (req, res, next) => {
         formsCSS: true,
         productCSS: true,
         activeAddProduct: true,
+        isAuthenticated: req.session.isLoggedIn,
+        csrfToken: req.csrfToken(),
     });
 };
 
@@ -66,7 +69,8 @@ exports.getEditProduct = async (req, res, next) => {
             activeAddProduct: true,
             editing: editMode,
             product: product,
-            isAuthenticated: req.IsLoggedIn
+            isAuthenticated: req.session.isLoggedIn,
+            csrfToken: req.csrfToken(),
         });
     } catch (err) {
         console.log("Error:", err);
