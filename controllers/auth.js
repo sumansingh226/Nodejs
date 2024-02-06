@@ -21,7 +21,6 @@ exports.postSignUp = async (req, res, next) => {
     try {
         const { name, email, password, confirmPassword } = req.body;
         const userDoc = await User.findOne({ email: email });
-
         if (userDoc) {
             req.flash(
                 "error",
@@ -119,6 +118,7 @@ exports.postLogOut = (req, res, next) => {
     });
 };
 
+
 exports.getResetPassword = (req, res, next) => {
     let message = req.flash("error");
     if (message.length > 0) {
@@ -131,6 +131,8 @@ exports.getResetPassword = (req, res, next) => {
         errorMessage: message,
     });
 };
+
+
 const sendPasswordResetEmail = async (toEmail, resetToken) => {
     const transporter = nodemailer.createTransport({
         service: "gmail",
