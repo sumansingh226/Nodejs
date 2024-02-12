@@ -21,6 +21,7 @@ exports.getSignUp = (req, res, next) => {
 exports.postSignUp = async (req, res, next) => {
     try {
         const validationErrors = validationResult(req);
+        console.log("req", req);
         if (!validationErrors.isEmpty()) {
             const errors = validationErrors.array().map(error => error.msg);
             req.flash("error", errors);
