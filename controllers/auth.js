@@ -20,6 +20,16 @@ exports.getSignUp = (req, res, next) => {
 
 exports.postSignUp = async (req, res, next) => {
     try {
+        const validationErrors = validationResult(req);
+        if (!validationErrors.isEmpty()) {
+            console.log("err", validationErrors.array());
+            res.render("auth/signup", {
+                path: "/signup",
+                pageTitle: "SignUp",
+                isAuthenticated: req.session.isLoggedIn,
+                errorMessage: validationErrors.array(),
+            });
+        }
         const { name, email, password, confirmPassword } = req.body;
         const userDoc = await User.findOne({ email: email });
         if (userDoc) {
