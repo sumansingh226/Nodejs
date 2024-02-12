@@ -22,32 +22,32 @@ exports.postSignUp = async (req, res, next) => {
     try {
         const validationErrors = validationResult(req);
         if (!validationErrors.isEmpty()) {
-            console.log("err", validationErrors.array());
-            res.render("auth/signup", {
-                path: "/signup",
-                pageTitle: "SignUp",
-                isAuthenticated: req.session.isLoggedIn,
-                errorMessage: validationErrors.array(),
-            });
-        }
-        const { name, email, password, confirmPassword } = req.body;
-        const userDoc = await User.findOne({ email: email });
-        if (userDoc) {
-            req.flash(
-                "error",
-                "Email already exists. Please pick a different email."
-            );
+            const errors = validationErrors.array().map(error => error.msg);
+            req.flash("error", errors);
             return res.redirect("/signup");
         }
 
+        const { name, email, password, confirmPassword } = req.body;
+
+        // Check if user with the same email already exists
+        const userDoc = await User.findOne({ email: email });
+        if (userDoc) {
+            req.flash("error", "Email already exists. Please pick a different email.");
+            return res.redirect("/signup");
+        }
+
+        // Hash the password
         const hashPassword = await bcrypt.hash(password, 12);
+
+        // Create new user
         const user = new User({
             name: name,
             email: email,
             password: hashPassword,
-            cart: { items: [] },
+            cart: { items: [] }
         });
 
+        // Save the user to the database
         await user.save();
 
         // Send a welcome email to the user
@@ -56,7 +56,8 @@ exports.postSignUp = async (req, res, next) => {
         req.flash("success", "You have successfully signed up!");
         return res.redirect("/login");
     } catch (err) {
-        console.error(err);
+        console.error("Error in postSignUp:", err);
+        req.flash("error", "An error occurred. Please try again later.");
         return res.redirect("/signup");
     }
 };
