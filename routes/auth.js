@@ -5,7 +5,7 @@ const { check } = require("express-validator");
 
 // Signup Routes
 router.get('/signup', authController.getSignUp);
-router.post('/signup', authController.postSignUp);
+router.post('/signup', check('email').isEmail(), authController.postSignUp);
 
 // Login Routes
 router.get('/login', authController.getLogin);
