@@ -7,7 +7,15 @@ const { check } = require("express-validator");
 router.get("/signup", authController.getSignUp);
 router.post(
     "/signup",
-    check("email").isEmail().withMessage("Please Entera A Valid Email Address"),
+    check("email")
+        .isEmail()
+        .withMessage("Please Enter A Valid Email Address")
+        .custom((value, { req }) => {
+            if (value === "test@test.com") {
+                throw new Error("Invalid email forbidden!");
+            }
+            return true;
+        }),
     authController.postSignUp
 );
 
