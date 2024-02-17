@@ -26,29 +26,24 @@ exports.getSignUp = (req, res, next) => {
 
 exports.postSignUp = async (req, res, next) => {
     try {
+        const { name, email, password, confirmPassword } = req.body;
         const validationErrors = validationResult(req);
         if (!validationErrors.isEmpty()) {
             const errors = validationErrors.array().map(error => error.msg);
-            res.render("auth/signup", {
-                path: "/signup",
-                pageTitle: "SignUp",
-                isAuthenticated: req.session.isLoggedIn,
-                errorMessage: message,
-                oldInput: { name, email, password, confirmPassword }
-            });
-        }
-        const { name, email, password, confirmPassword } = req.body;
-        // Check if user with the same email already exists
-        const userDoc = await User.findOne({ email: email });
-        if (userDoc) {
-            req.flash("error", "Email already exists. Please pick a different email.");
+            req.flash("error", errors.join(", "));
             return res.render("auth/signup", {
                 path: "/signup",
                 pageTitle: "SignUp",
                 isAuthenticated: req.session.isLoggedIn,
-                errorMessage: message,
+                errorMessage: errors.join(", "),
                 oldInput: { name, email, password, confirmPassword }
             });
+        }
+        // Check if user with the same email already exists
+        const userDoc = await User.findOne({ email: email });
+        if (userDoc) {
+            req.flash("error", "Email already exists. Please pick a different email.");
+            return res.redirect("/signup");
         }
         // Hash the password
         const hashPassword = await bcrypt.hash(password, 12);
@@ -71,6 +66,7 @@ exports.postSignUp = async (req, res, next) => {
         return res.redirect("/signup");
     }
 };
+
 
 // Function to send a welcome email
 const sendWelcomeEmail = async (toEmail, userName) => {
