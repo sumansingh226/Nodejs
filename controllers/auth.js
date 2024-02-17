@@ -23,15 +23,25 @@ exports.postSignUp = async (req, res, next) => {
         const validationErrors = validationResult(req);
         if (!validationErrors.isEmpty()) {
             const errors = validationErrors.array().map(error => error.msg);
-            req.flash("error", errors);
-            return res.redirect("/signup");
+            res.render("auth/signup", {
+                path: "/signup",
+                pageTitle: "SignUp",
+                isAuthenticated: req.session.isLoggedIn,
+                errorMessage: message,
+            });
         }
         const { name, email, password, confirmPassword } = req.body;
         // Check if user with the same email already exists
         const userDoc = await User.findOne({ email: email });
         if (userDoc) {
             req.flash("error", "Email already exists. Please pick a different email.");
-            return res.redirect("/signup");
+            return
+            res.render("auth/signup", {
+                path: "/signup",
+                pageTitle: "SignUp",
+                isAuthenticated: req.session.isLoggedIn,
+                errorMessage: message,
+            });
         }
         // Hash the password
         const hashPassword = await bcrypt.hash(password, 12);
