@@ -7,7 +7,7 @@ const { check } = require("express-validator");
 router.get("/signup", authController.getSignUp);
 router.post(
     "/signup",
-    check("email")
+    [check("email")
         .isEmail()
         .withMessage("Please Enter A Valid Email Address")
         .custom((value, { req }) => {
@@ -16,6 +16,7 @@ router.post(
             }
             return true;
         }),
+    body('password')],
     authController.postSignUp
 );
 
