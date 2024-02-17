@@ -15,31 +15,38 @@ exports.getSignUp = (req, res, next) => {
         pageTitle: "SignUp",
         isAuthenticated: req.session.isLoggedIn,
         errorMessage: message,
+        oldInput: {
+            name: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+        }
     });
 };
 
 exports.postSignUp = async (req, res, next) => {
     try {
+        const { name, email, password, confirmPassword } = req.body;
         const validationErrors = validationResult(req);
-        console.log("req", req);
         if (!validationErrors.isEmpty()) {
             const errors = validationErrors.array().map(error => error.msg);
-            req.flash("error", errors);
-            return res.redirect("/signup");
+            req.flash("error", errors.join(", "));
+            return res.render("auth/signup", {
+                path: "/signup",
+                pageTitle: "SignUp",
+                isAuthenticated: req.session.isLoggedIn,
+                errorMessage: errors.join(", "),
+                oldInput: { name, email, password, confirmPassword }
+            });
         }
-
-        const { name, email, password, confirmPassword } = req.body;
-
         // Check if user with the same email already exists
         const userDoc = await User.findOne({ email: email });
         if (userDoc) {
             req.flash("error", "Email already exists. Please pick a different email.");
             return res.redirect("/signup");
         }
-
         // Hash the password
         const hashPassword = await bcrypt.hash(password, 12);
-
         // Create new user
         const user = new User({
             name: name,
@@ -47,13 +54,10 @@ exports.postSignUp = async (req, res, next) => {
             password: hashPassword,
             cart: { items: [] }
         });
-
         // Save the user to the database
         await user.save();
-
         // Send a welcome email to the user
         await sendWelcomeEmail(email, name);
-
         req.flash("success", "You have successfully signed up!");
         return res.redirect("/login");
     } catch (err) {
@@ -62,6 +66,7 @@ exports.postSignUp = async (req, res, next) => {
         return res.redirect("/signup");
     }
 };
+
 
 // Function to send a welcome email
 const sendWelcomeEmail = async (toEmail, userName) => {
