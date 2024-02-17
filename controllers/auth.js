@@ -35,8 +35,7 @@ exports.postSignUp = async (req, res, next) => {
         const userDoc = await User.findOne({ email: email });
         if (userDoc) {
             req.flash("error", "Email already exists. Please pick a different email.");
-            return
-            res.render("auth/signup", {
+            return res.render("auth/signup", {
                 path: "/signup",
                 pageTitle: "SignUp",
                 isAuthenticated: req.session.isLoggedIn,
