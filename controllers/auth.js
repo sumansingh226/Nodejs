@@ -15,6 +15,12 @@ exports.getSignUp = (req, res, next) => {
         pageTitle: "SignUp",
         isAuthenticated: req.session.isLoggedIn,
         errorMessage: message,
+        oldInput: {
+            name: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+        }
     });
 };
 
@@ -28,6 +34,7 @@ exports.postSignUp = async (req, res, next) => {
                 pageTitle: "SignUp",
                 isAuthenticated: req.session.isLoggedIn,
                 errorMessage: message,
+                oldInput: { name, email, password, confirmPassword }
             });
         }
         const { name, email, password, confirmPassword } = req.body;
@@ -40,6 +47,7 @@ exports.postSignUp = async (req, res, next) => {
                 pageTitle: "SignUp",
                 isAuthenticated: req.session.isLoggedIn,
                 errorMessage: message,
+                oldInput: { name, email, password, confirmPassword }
             });
         }
         // Hash the password
