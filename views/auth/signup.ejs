@@ -6,29 +6,32 @@
 <body>
    <%- include('../includes/navigation.ejs') %>
 
-    <main>
-        <form class="login-form" action="/signup" method="POST" novalidate>
-            <div class="form-control">
-                <label for="name">Name</label>
-                <input type="text" name="name" id="name">
-            </div>
-            <div class="form-control">
-                <label for="email">E-Mail</label>
-                <input type="email" name="email" id="email">
-            </div>
-            <div class="form-control">
-                <label for="password">Password</label>
-                <input type="password" name="password" id="password">
-            </div>
-            <div class="form-control">
-                <label for="confirmPassword">Confirm Password</label>
-                <input type="password" name="confirmPassword" id="confirmPassword">
-            </div>
-            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-            <button class="btn" type="submit">SignUp</button>
-        </form>
-        <div class="form-control"> <% if (errorMessage) { %>
+   <main>
+    <form class="login-form" action="/signup" method="POST" novalidate>
+        <div class="form-control">
+            <label for="name">Name</label>
+            <input type="text" name="name" id="name" value="<%= oldInput.name || '' %>">
+        </div>
+        <div class="form-control">
+            <label for="email">E-Mail</label>
+            <input type="email" name="email" id="email" value="<%= oldInput.email || '' %>">
+        </div>
+        <div class="form-control">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" value="">
+        </div>
+        <div class="form-control">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" name="confirmPassword" id="confirmPassword" value="">
+        </div>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <button class="btn" type="submit">SignUp</button>
+    </form>
+    <% if (errorMessage) { %>
+        <div class="form-control">
             <p class="error-message"><%= errorMessage %></p>
-        <% } %></div>
-    </main>
+        </div>
+    <% } %>
+</main>
+
 <%- include('../includes/end.ejs') %>
