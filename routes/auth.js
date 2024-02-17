@@ -22,7 +22,6 @@ router.post(
             }),
         body("password")
             .isLength({ min: 5 })
-
             .withMessage(
                 "Password must be at least 5 characters long and contain only letters and numbers."
             ),

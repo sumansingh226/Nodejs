@@ -27,19 +27,15 @@ exports.postSignUp = async (req, res, next) => {
             req.flash("error", errors);
             return res.redirect("/signup");
         }
-
         const { name, email, password, confirmPassword } = req.body;
-
         // Check if user with the same email already exists
         const userDoc = await User.findOne({ email: email });
         if (userDoc) {
             req.flash("error", "Email already exists. Please pick a different email.");
             return res.redirect("/signup");
         }
-
         // Hash the password
         const hashPassword = await bcrypt.hash(password, 12);
-
         // Create new user
         const user = new User({
             name: name,
@@ -47,13 +43,10 @@ exports.postSignUp = async (req, res, next) => {
             password: hashPassword,
             cart: { items: [] }
         });
-
         // Save the user to the database
         await user.save();
-
         // Send a welcome email to the user
         await sendWelcomeEmail(email, name);
-
         req.flash("success", "You have successfully signed up!");
         return res.redirect("/login");
     } catch (err) {
