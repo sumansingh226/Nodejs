@@ -1,10 +1,11 @@
 const express = require("express");
 const authController = require("../controllers/auth");
 const router = express.Router();
-const { check } = require("express-validator");
+const { check, body, } = require("express-validator");
 
 // Signup Routes
 router.get("/signup", authController.getSignUp);
+
 router.post(
     "/signup",
     [
@@ -12,6 +13,7 @@ router.post(
             .isEmail()
             .withMessage("Please enter a valid email address.")
             .custom((value, { req }) => {
+
                 if (value === "test@test.com") {
                     throw new Error("This email is not allowed. Please use a different one.");
                 }
@@ -24,6 +26,7 @@ router.post(
     ],
     authController.postSignUp
 );
+
 
 
 // Login Routes
