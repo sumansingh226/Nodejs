@@ -2,8 +2,8 @@ const User = require("../models/monggoseUserModel");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
-require("dotenv").config();
 const { validationResult } = require("express-validator")
+require("dotenv").config();
 
 exports.getSignUp = (req, res, next) => {
     let message = req.flash("error");
@@ -104,13 +104,26 @@ exports.getLogin = (req, res, next) => {
     });
 };
 
+
 exports.postLogin = async (req, res, next) => {
     try {
         const { email, password } = req.body;
-        const user = await User.findOne({ email: email });
-        if (!user) {
+        const errors = validationResult(req);
+        if (!email || !password) {
+            req.flash("error", "Please enter both email and password");
             return res.redirect("/login");
         }
+        if (!errors.isEmpty()) {
+            req.flash("error", "Invalid email or password");
+            return res.redirect("/login");
+        }
+
+        const user = await User.findOne({ email: email });
+        if (!user) {
+            req.flash("error", "User not found");
+            return res.redirect("/login");
+        }
+
         const doMatch = await bcrypt.compare(password, user.password);
         if (doMatch) {
             res.setHeader("Set-Cookie", "loggedInCookie=true; Max-Age=10; HttpOnly");
@@ -118,14 +131,14 @@ exports.postLogin = async (req, res, next) => {
             req.session.user = user;
             return res.redirect("/");
         } else {
-            req.flash("error", "invalid user name  or password!");
+            req.flash("error", "Invalid password");
             return res.redirect("/login");
         }
     } catch (err) {
-        console.error(err);
         return res.redirect("/login");
     }
 };
+
 
 exports.postLogOut = (req, res, next) => {
     req.session.destroy((err) => {
