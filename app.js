@@ -61,7 +61,6 @@ app.use(errorController.get404);
 
 const connectToMongoDB = async () => {
     const dbURI = process.env.CONNECTION_URL;
-
     try {
         await mongoose.connect(dbURI, {
             useNewUrlParser: true,
