@@ -25,8 +25,8 @@ const csrfProtection = csrf();
 app.set("view engine", "ejs");
 app.set("views", "views");
 
-app.use(multer().single('image'));
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(multer({ storage }).single('image'));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
     session({
