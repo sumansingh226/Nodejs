@@ -13,6 +13,7 @@ const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
 const csrf = require("csurf");
 const flash = require("connect-flash");
+const multer = require("multer");
 
 const app = express();
 const store = new MongoDBStore({
@@ -24,6 +25,7 @@ const csrfProtection = csrf();
 app.set("view engine", "ejs");
 app.set("views", "views");
 
+app.use(multer().single('image'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
@@ -53,7 +55,6 @@ app.use((req, res, next) => {
     res.locals.csrfToken = req.csrfToken();
     next();
 });
-
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
