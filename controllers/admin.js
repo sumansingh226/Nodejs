@@ -2,7 +2,6 @@
 const Product = require("../models/monggosProductSchema");
 
 exports.getAllProducts = (req, res, next) => {
-    // Product.find({ userID: req.user._id }).populate('userID', 'name')
     Product.find().populate('userID', 'name')
         .then((products) => {
             res.render("admin/products", {
@@ -44,7 +43,7 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
     const product = new Product({ ...req.body, userID: req.user._id });
-
+    console.log("req.body.i", req.file)
     product.save()
         .then((result) => {
             console.log("Product Created successfully", result);

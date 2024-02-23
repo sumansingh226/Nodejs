@@ -1,4 +1,5 @@
 const path = require("path");
+const fs = require("fs");
 const express = require("express");
 const bodyParser = require("body-parser");
 const errorController = require("./controllers/error");
@@ -13,6 +14,7 @@ const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
 const csrf = require("csurf");
 const flash = require("connect-flash");
+const multer = require("multer");
 
 const app = express();
 const store = new MongoDBStore({
@@ -21,10 +23,25 @@ const store = new MongoDBStore({
 });
 const csrfProtection = csrf();
 
+const fileStorage = multer.diskStorage({
+    destination: (req, file, callback) => {
+        const dir = "./images";
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir);
+        }
+        callback(null, dir);
+    },
+
+    filename: (req, file, callback) => {
+        callback(null, new Date().toISOString() + "-" + file.originalname);
+    },
+});
+
 app.set("view engine", "ejs");
 app.set("views", "views");
 
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(multer({ storage: fileStorage }).single("image"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
     session({
@@ -53,7 +70,6 @@ app.use((req, res, next) => {
     res.locals.csrfToken = req.csrfToken();
     next();
 });
-
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
@@ -61,7 +77,6 @@ app.use(errorController.get404);
 
 const connectToMongoDB = async () => {
     const dbURI = process.env.CONNECTION_URL;
-
     try {
         await mongoose.connect(dbURI, {
             useNewUrlParser: true,
