@@ -1,4 +1,5 @@
 const path = require("path");
+const fs = require("fs");
 const express = require("express");
 const bodyParser = require("body-parser");
 const errorController = require("./controllers/error");
@@ -23,13 +24,19 @@ const store = new MongoDBStore({
 const csrfProtection = csrf();
 
 const fileStorage = multer.diskStorage({
-    destination: (req, res, callback) => {
-        callback(null, "./images");
+    destination: (req, file, callback) => {
+        const dir = "./images";
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir);
+        }
+        callback(null, dir);
     },
+
     filename: (req, file, callback) => {
         callback(null, new Date().toISOString() + "-" + file.originalname);
     },
 });
+
 app.set("view engine", "ejs");
 app.set("views", "views");
 
