@@ -38,12 +38,18 @@ exports.getAddProduct = (req, res, next) => {
         activeAddProduct: true,
         isAuthenticated: req.session.isLoggedIn,
         csrfToken: req.csrfToken(),
+        errorMessage: ""
     });
 };
 
 exports.postAddProduct = (req, res, next) => {
-    const product = new Product({ ...req.body, userID: req.user._id });
-    console.log("req.body.i", req.file)
+    const payload = req.body;
+    payload.image = req.file.path;
+    let product = new Product({ ...payload, userID: req.user._id });
+    if (!req.body.iamge) {
+        req.flash("invalid Input ");
+
+    }
     product.save()
         .then((result) => {
             console.log("Product Created successfully", result);

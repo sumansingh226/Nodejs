@@ -23,25 +23,51 @@ const store = new MongoDBStore({
 });
 const csrfProtection = csrf();
 
-const fileStorage = multer.diskStorage({
-    destination: (req, file, callback) => {
-        const dir = "./images";
-        if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir);
-        }
-        callback(null, dir);
-    },
 
-    filename: (req, file, callback) => {
-        callback(null, new Date().toISOString() + "-" + file.originalname);
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        const uploadDir = "./public/uploads/";
+        fs.mkdir(uploadDir, { recursive: true }, (err) => {
+            if (err) {
+                console.error("Error creating upload directory:", err);
+                cb(err, null);
+            } else {
+                cb(null, uploadDir);
+            }
+        });
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + file.originalname);
     },
 });
+
+const fileFilter = (req, file, cb) => {
+    if (
+        file.mimetype === "image/jpeg" ||
+        file.mimetype === "image/jpg" ||
+        file.mimetype === "image/png"
+    ) {
+        cb(null, true);
+    } else {
+        cb(null, false);
+    }
+};
+
+const fileStorage = multer({
+    storage: storage,
+    limits: {
+        fileSize: 1024 * 1024 * 5,
+    },
+    fileFilter: fileFilter,
+});
+
+app.use(fileStorage.single('image'));
+
 
 app.set("view engine", "ejs");
 app.set("views", "views");
 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(multer({ storage: fileStorage }).single("image"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
     session({
