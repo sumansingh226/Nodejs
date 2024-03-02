@@ -183,3 +183,8 @@ exports.postCheckout = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getOrderInvoice = async (req, res, next) => {
+  const orderId = req.params.orderId;
+
+}
