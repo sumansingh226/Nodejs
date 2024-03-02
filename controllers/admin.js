@@ -44,7 +44,7 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
     const payload = req.body;
-    payload.image = req.file.path;
+    payload.image = req.file.path.replace('public\\', '');
     let product = new Product({ ...payload, userID: req.user._id });
     if (!req.body.iamge) {
         req.flash("invalid Input ");
