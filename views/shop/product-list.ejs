@@ -27,7 +27,7 @@
                                     </p>
                                 </div>
                                 <div class="card__actions">
-                                    <a href="product/<%=product._id%> " class="btn">Details</a>
+                                    <a href="<%=product._id%> " class="btn">Details</a>
                                     <form action="/cart" method="post">
                                         <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                                         <button class="btn" type="submit">Add to cart</button>

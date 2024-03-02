@@ -26,7 +26,7 @@ const csrfProtection = csrf();
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        const uploadDir = "./public/uploads/";
+        const uploadDir = "./public/images/";
         fs.mkdir(uploadDir, { recursive: true }, (err) => {
             if (err) {
                 console.error("Error creating upload directory:", err);
@@ -37,7 +37,7 @@ const storage = multer.diskStorage({
         });
     },
     filename: function (req, file, cb) {
-        cb(null, Date.now() + file.originalname);
+        cb(null, file.originalname);
     },
 });
 
@@ -68,7 +68,10 @@ app.set("view engine", "ejs");
 app.set("views", "views");
 
 app.use(bodyParser.urlencoded({ extended: false }));
+
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/images", express.static(path.join(__dirname, "public",)));
+
 app.use(
     session({
         secret: process.env.SESSION_SECRET,
