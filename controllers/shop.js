@@ -192,21 +192,22 @@ exports.postCheckout = async (req, res, next) => {
 exports.getOrderInvoice = async (req, res, next) => {
   try {
     const orderId = req.params.orderId;
-    console.log(orderId)
     const invoiceName = 'invoice-' + orderId + ".pdf";
     const invoicePath = path.join('data', 'invoices', invoiceName);
     fs.readFile(invoicePath, (err, data) => {
       if (err) {
         return next(err);
+      } else {
+        res.set({
+          'Content-Type': 'application/pdf',
+          'Content-Disposition': 'attachment; filename=' + invoiceName,
+        });
+        return res.status(200).send(data);
       }
-      else {
-        res.set('Content-Type', 'application/pdf');
-        res.status(200).send(data);
-      }
-    })
+    });
   } catch (error) {
     console.log(error);
     next(error);
   }
-}
+};
 
