@@ -200,10 +200,13 @@ exports.getOrderInvoice = async (req, res, next) => {
         return next(err);
       }
       else {
+        res.set('Content-Type', 'application/pdf');
         res.status(200).send(data);
       }
     })
   } catch (error) {
-    console.log(err)
+    console.log(error);
+    next(error);
   }
 }
+
