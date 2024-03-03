@@ -18,6 +18,7 @@
         </p>
         <p class="product-details__description"><%= product.description %></p>
         <form action="/cart" method="post">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
           <button class="btn" type="submit">Add to cart</button>
           <input
             type="hidden"
