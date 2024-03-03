@@ -128,7 +128,10 @@ exports.removeFromCart = (req, res, next) => {
 
 exports.getOrders = async (req, res, next) => {
   try {
-    const products = await Order.find({ "user.userId": req.user._id });
+    const userId = req.user._id
+    const products = await Order.find({});
+    console.log("userId", userId)
+    console.log("products", products)
 
     res.render("shop/orders", {
       path: "/orders",
@@ -149,7 +152,9 @@ exports.getOrders = async (req, res, next) => {
 
 exports.postCheckout = async (req, res, next) => {
   try {
-    const user = await User.findById(req.user._id)
+    const email = req.user.email;
+    const id = req.user._id;
+    const user = await User.findById(id)
       .populate("cart.items.productID")
       .exec();
     const products = user.cart.items.map((item) => ({
@@ -159,30 +164,31 @@ exports.postCheckout = async (req, res, next) => {
 
     const order = new Order({
       user: {
-        name: req.user.email,
-        userId: req.user,
+        email: email,
+        userId: id,
       },
       products: products,
     });
-
-    const [orderSaveResult, clearCartResult] = await Promise.allSettled([
-      order.save(),
-      req.user.clearCartOnOrder(),
-    ]);
-
-    const productsOrders = await Order.find({ "user.userId": req.user._id });
-    res.render("shop/orders", {
-      path: "/orders",
-      pageTitle: "My Orders",
-      isAuthenticated: req.session.isLoggedIn,
-      orders: productsOrders,
-
-    });
+    const orderSaveResult = await order.save();
+    const clearCartResult = await req.user.clearCartOnOrder();
+    if (orderSaveResult && clearCartResult) {
+      const productsOrders = await Order.find({ "user.userId": req.user._id });
+      return res.render("shop/orders", {
+        path: "/orders",
+        pageTitle: "My Orders",
+        isAuthenticated: req.session.isLoggedIn,
+        orders: productsOrders,
+      });
+    } else {
+      throw new Error('Failed to save order or clear cart');
+    }
   } catch (error) {
     console.error("Error in postCheckout:", error);
     next(error);
   }
 };
+
+
 
 exports.getOrderInvoice = async (req, res, next) => {
   const orderId = req.params.orderId;
