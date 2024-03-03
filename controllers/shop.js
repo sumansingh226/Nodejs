@@ -1,7 +1,9 @@
-const Cart = require("../models/cart");
+const fs = require("fs");
+const path = require("path");
 const Product = require("../models/monggosProductSchema");
 const User = require("../models/monggoseUserModel");
 const Order = require("../models/mongooseOrderModel");
+
 
 exports.getProducts = (req, res, next) => {
   Product.find()
@@ -130,9 +132,6 @@ exports.getOrders = async (req, res, next) => {
   try {
     const userId = req.user._id
     const products = await Order.find({});
-    console.log("userId", userId)
-    console.log("products", products)
-
     res.render("shop/orders", {
       path: "/orders",
       pageTitle: "My  Orders",
@@ -191,6 +190,20 @@ exports.postCheckout = async (req, res, next) => {
 
 
 exports.getOrderInvoice = async (req, res, next) => {
-  const orderId = req.params.orderId;
-
+  try {
+    const orderId = req.params.orderId;
+    console.log(orderId)
+    const invoiceName = 'invoice-' + orderId + ".pdf";
+    const invoicePath = path.join('data', 'invoices', invoiceName);
+    fs.readFile(invoicePath, (err, data) => {
+      if (err) {
+        return next(err);
+      }
+      else {
+        res.status(200).send(data);
+      }
+    })
+  } catch (error) {
+    console.log(err)
+  }
 }
