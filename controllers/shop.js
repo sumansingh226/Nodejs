@@ -130,7 +130,6 @@ exports.removeFromCart = (req, res, next) => {
 
 exports.getOrders = async (req, res, next) => {
   try {
-    const userId = req.user._id;
     const products = await Order.find({});
     res.render("shop/orders", {
       path: "/orders",
