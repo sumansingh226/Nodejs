@@ -193,23 +193,29 @@ exports.getOrderInvoice = async (req, res, next) => {
     const invoiceName = "invoice-" + orderId + ".pdf";
     const invoicePath = path.join("data", "invoices", invoiceName);
 
-    const order = await Order.findById(orderId);
-    if (!order) {
-      throw new Error("Order not found!");
-    }
-    if (order.user.userId.toString() !== req.user._id.toString()) {
-      throw new Error("Unauthorized");
-    }
-
-    fs.readFile(invoicePath, (err, data) => {
+    // Check if the file exists
+    fs.access(invoicePath, fs.constants.F_OK, (err) => {
       if (err) {
-        return next(err);
+        return next(new Error("Invoice not found"));
       }
-      res.set({
-        "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename=${invoiceName}`,
+
+      // Check if the user is authorized to access the invoice
+      Order.findById(orderId).then((order) => {
+        if (!order) {
+          return next(new Error("Order not found"));
+        }
+        if (order.user.userId.toString() !== req.user._id.toString()) {
+          return next(new Error("Unauthorized"));
+        }
+
+        // Stream the file to the response
+        const fileStream = fs.createReadStream(invoicePath);
+        res.set({
+          "Content-Type": "application/pdf",
+          "Content-Disposition": "attachment; filename=" + invoiceName,
+        });
+        fileStream.pipe(res);
       });
-      return res.status(200).send(data);
     });
   } catch (error) {
     console.log(error);
