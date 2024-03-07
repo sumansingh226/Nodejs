@@ -3,7 +3,7 @@ const path = require("path");
 const Product = require("../models/monggosProductSchema");
 const User = require("../models/monggoseUserModel");
 const Order = require("../models/mongooseOrderModel");
-
+const PDFDocument = require("pdfkit");
 
 exports.getProducts = (req, res, next) => {
   Product.find()
@@ -130,7 +130,6 @@ exports.removeFromCart = (req, res, next) => {
 
 exports.getOrders = async (req, res, next) => {
   try {
-    const userId = req.user._id
     const products = await Order.find({});
     res.render("shop/orders", {
       path: "/orders",
@@ -179,7 +178,7 @@ exports.postCheckout = async (req, res, next) => {
         orders: productsOrders,
       });
     } else {
-      throw new Error('Failed to save order or clear cart');
+      throw new Error("Failed to save order or clear cart");
     }
   } catch (error) {
     console.error("Error in postCheckout:", error);
@@ -187,23 +186,72 @@ exports.postCheckout = async (req, res, next) => {
   }
 };
 
-
-
 exports.getOrderInvoice = async (req, res, next) => {
   try {
     const orderId = req.params.orderId;
-    const invoiceName = 'invoice-' + orderId + ".pdf";
-    const invoicePath = path.join('data', 'invoices', invoiceName);
-    fs.readFile(invoicePath, (err, data) => {
+    const invoiceName = "invoice-" + orderId + ".pdf";
+    const invoicePath = path.join("data", "invoices", invoiceName);
+
+    // Check if the file exists
+    fs.access(invoicePath, fs.constants.F_OK, (err) => {
       if (err) {
-        return next(err);
-      } else {
-        res.set({
-          'Content-Type': 'application/pdf',
-          'Content-Disposition': 'attachment; filename=' + invoiceName,
-        });
-        return res.status(200).send(data);
+        return next(new Error("Invoice not found"));
       }
+
+      // Check if the user is authorized to access the invoice
+      Order.findById(orderId).then((order) => {
+        if (!order) {
+          return next(new Error("Order not found"));
+        }
+        if (order.user.userId.toString() !== req.user._id.toString()) {
+          return next(new Error("Unauthorized"));
+        }
+
+        // Create a new PDF document
+        const invoiceDoc = new PDFDocument();
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename=${invoiceName}`);
+        invoiceDoc.pipe(fs.createWriteStream(invoicePath));
+
+        // Add styles to the PDF document
+        invoiceDoc.font('Helvetica');
+        invoiceDoc.fontSize(20);
+        invoiceDoc.text("Invoice", { align: 'center' });
+
+        invoiceDoc.moveDown();
+        invoiceDoc.fontSize(14);
+        invoiceDoc.text("Order Details:", { underline: true });
+        invoiceDoc.text(`Order ID: ${order._id}`);
+        invoiceDoc.text(`Order Date: ${new Date().toDateString()}`);
+
+        invoiceDoc.moveDown();
+        invoiceDoc.text("User Details:", { underline: true });
+        invoiceDoc.text(`Email: ${order.user.email}`);
+        invoiceDoc.text(`User ID: ${order.user.userId}`);
+
+        invoiceDoc.moveDown();
+        invoiceDoc.text("Products:", { underline: true });
+        order.products.forEach((product, index) => {
+          invoiceDoc.text(`${index + 1}. ${product.product.name} - Quantity: ${product.quantity}, Price: $${product.product.price.toFixed(2)}`);
+        });
+
+        // Calculate total
+        const subtotal = order.products.reduce((acc, curr) => acc + curr.product.price * curr.quantity, 0);
+        const taxPercentage = 0.1; // Example GST percentage
+        const taxAmount = subtotal * taxPercentage;
+        const total = subtotal + taxAmount;
+
+        // Add subtotal, tax, and total to the invoice
+        invoiceDoc.moveDown();
+        invoiceDoc.text(`Subtotal: $${subtotal.toFixed(2)}`);
+        invoiceDoc.text(`GST (${(taxPercentage * 100).toFixed(2)}%): $${taxAmount.toFixed(2)}`);
+        invoiceDoc.text(`Total: $${total.toFixed(2)}`);
+
+        // End and stream the PDF document to the response
+        invoiceDoc.end();
+        const fileStream = fs.createReadStream(invoicePath);
+        fileStream.pipe(res);
+      });
     });
   } catch (error) {
     console.log(error);

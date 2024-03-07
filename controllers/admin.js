@@ -1,5 +1,6 @@
 // const Product = require("../models/product");
 const Product = require("../models/monggosProductSchema");
+const { default: deleteFile } = require("../util/fileHandlers");
 
 exports.getAllProducts = (req, res, next) => {
     Product.find().populate('userID', 'name')
@@ -99,11 +100,18 @@ exports.postEditProduct = async (req, res, next) => {
 exports.postDeleteProduct = async (req, res, next) => {
     try {
         const { productID } = req.body;
+        const product = await Product.findById(productID);
+        if (!product) {
+            throw new Error("Product not found");
+        }
+
+        await deleteFile(product.imageUrl);
         await Product.findByIdAndDelete(productID);
-        res.status(200).redirect("/admin/products");
+
         console.log('Product deleted successfully');
+        res.status(200).redirect("/admin/products");
     } catch (error) {
         console.error('Error deleting product:', error);
+        res.status(500).send("Error deleting product");
     }
-
 };
