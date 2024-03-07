@@ -4,7 +4,6 @@ const Product = require("../models/monggosProductSchema");
 const User = require("../models/monggoseUserModel");
 const Order = require("../models/mongooseOrderModel");
 
-
 exports.getProducts = (req, res, next) => {
   Product.find()
     .then((products) => {
@@ -130,7 +129,7 @@ exports.removeFromCart = (req, res, next) => {
 
 exports.getOrders = async (req, res, next) => {
   try {
-    const userId = req.user._id
+    const userId = req.user._id;
     const products = await Order.find({});
     res.render("shop/orders", {
       path: "/orders",
@@ -179,7 +178,7 @@ exports.postCheckout = async (req, res, next) => {
         orders: productsOrders,
       });
     } else {
-      throw new Error('Failed to save order or clear cart');
+      throw new Error("Failed to save order or clear cart");
     }
   } catch (error) {
     console.error("Error in postCheckout:", error);
@@ -188,26 +187,32 @@ exports.postCheckout = async (req, res, next) => {
 };
 
 
-
 exports.getOrderInvoice = async (req, res, next) => {
   try {
     const orderId = req.params.orderId;
-    const invoiceName = 'invoice-' + orderId + ".pdf";
-    const invoicePath = path.join('data', 'invoices', invoiceName);
+    const invoiceName = "invoice-" + orderId + ".pdf";
+    const invoicePath = path.join("data", "invoices", invoiceName);
+
+    const order = await Order.findById(orderId);
+    if (!order) {
+      throw new Error("Order not found!");
+    }
+    if (order.user.userId.toString() !== req.user._id.toString()) {
+      throw new Error("Unauthorized");
+    }
+
     fs.readFile(invoicePath, (err, data) => {
       if (err) {
         return next(err);
-      } else {
-        res.set({
-          'Content-Type': 'application/pdf',
-          'Content-Disposition': 'attachment; filename=' + invoiceName,
-        });
-        return res.status(200).send(data);
       }
+      res.set({
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `attachment; filename=${invoiceName}`,
+      });
+      return res.status(200).send(data);
     });
   } catch (error) {
     console.log(error);
     next(error);
   }
 };
-
