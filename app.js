@@ -24,8 +24,8 @@ const app = express();
 const connectToMongoDB = async () => {
     try {
         await mongoose.connect('mongodb+srv://root:6D34dJED-RDUE59@cluster0.7j30n.mongodb.net/NodejsGraphQlDB?retryWrites=true&w=majority', {
-            useNewUrlParser: true,      // Optional: Mongoose 6+ handles these by default
-            useUnifiedTopology: true,   // Optional: Mongoose 6+ handles these by default
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
         });
         console.log("Connected to MongoDB");
     } catch (error) {
